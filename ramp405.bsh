@@ -6,18 +6,29 @@ kyle.m.douglass@gmail.com
 */
 
 // Modify these variables for your specific configuration
-String laser_name     = "Coherent Obis 405";
-int    frame_laser_on = 1000;
+String laser_name      = "Coherent Obis 405";
+int    frame_laser_on  = 1000;
+int    frame_laser_off = 1;
 
 // Code below this line not intended for modification
+int off_state = 0;
+int on_state  = 1;
+
 acq.clearRunnables();
 
 laser_on = new Runnable() {
    public void run() {
-      mmc.setProperty(laser_name, "State", 1);
+      mmc.setProperty(laser_name, "State", on_state);
+   }
+};
+
+laser_off = new Runnable() {
+	public void run() {
+      mmc.setProperty(laser_name, "State", off_state);
    }
 };
 
 // Attach the runnable to specific frames
 // -1 --> attach to all planes along given dimension
 acq.attachRunnable(frame_laser_on,-1,0,0, laser_on); // f, p, c, s, runnable
+acq.attachRunnable(frame_laser_off,-1,0,0, laser_off);
