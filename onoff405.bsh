@@ -10,8 +10,10 @@ the frames specified in `frame_laser_on` and `frame_laser_off`.
 In case that the on/off states are not equal to `0` and `1`, you may need to
 change the values of the variables `off_state` and `on_state`.
 
-Kyle M. Douglass, June 2016.
-kyle.m.douglass@gmail.com
+AUTHOR: Kyle M. Douglass, http://kmdouglass.github.io
+
+COPYRIGHT:     ECOLE POLYTECHNIQUE FEDERALE DE LAUSANNE, Switzerland
+               Laboratory of Experimental Biophysics (LEB), 2016
 */
 
 // Modify these variables for your specific configuration

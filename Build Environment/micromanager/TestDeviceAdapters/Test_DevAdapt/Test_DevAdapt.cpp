@@ -7,7 +7,8 @@
 //                
 // AUTHOR:        Kyle Douglass, http://kmdouglass.github.io
 //                
-// COPYRIGHT:     EPFL, Lausanne, 2016
+// COPYRIGHT:     ECOLE POLYTECHNIQUE FEDERALE DE LAUSANNE, Switzerland
+//                Laboratory of Experimental Biophysics (LEB), 2016
 //
 
 #include "Test_DevAdapt.h"
