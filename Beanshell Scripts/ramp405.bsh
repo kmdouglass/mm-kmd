@@ -1,14 +1,5 @@
 /*
-Automatically switches a laser on/off during an acqusition.
-
-To use this script, simply set the first four variables to values appropriate
-for your particular acquisition. `laser_name` is the name of the device that
-Micro-Manager uses to reference it. `state_name` is the name of the property
-that switches the laser on and off. Finally, the laser is switched on and off at
-the frames specified in `frame_laser_on` and `frame_laser_off`.
-
-In case that the on/off states are not equal to `0` and `1`, you may need to
-change the values of the variables `off_state` and `on_state`.
+Automatically ramps the 405 nm excitation during an acqusition.
 
 AUTHOR: Kyle M. Douglass, http://kmdouglass.github.io
 
@@ -19,8 +10,13 @@ COPYRIGHT:     ECOLE POLYTECHNIQUE FEDERALE DE LAUSANNE, Switzerland
 // Modify these variables for your specific configuration
 String laser_name      = "Laser: Obis 405nm";
 String state_name      = "State";
-int    frame_laser_on  = 500;
+String power_name      = "PowerSetpoint";
+int    frame_laser_on  = 10000;
 int    frame_laser_off = 1;
+
+// Frames for changing the laser power and the corresponding powers
+int [] frames    = new int [] {10001, 15000, 19999};
+double [] powers = new double [] {1, 2, 1};
 
 // Code below this line not intended for modification
 int off_state = 0;
@@ -40,7 +36,26 @@ laser_off = new Runnable() {
    }
 };
 
+// Returns a runnable
+// See http://micro-manager.3463995.n2.nabble.com/Acquisition-error-with-runnables-defined-in-a-for-loop-td7587119.html
+public Runnable set_power(int index) {
+	return new Runnable() {
+		public void run() {
+			mmc.setProperty(laser_name, power_name, powers[index]);
+		}
+	};
+}
+
 // Attach the runnables to the acquisition engine
 // -1 --> attach to all planes along given dimension
 acq.attachRunnable(frame_laser_on,-1,0,0, laser_on); // f, p, c, s, runnable
 acq.attachRunnable(frame_laser_off,-1,0,0, laser_off);
+acq.attachRunnable(19990,-1,0,0, laser_off);
+
+// Power runnables
+for(int ctr = 0; ctr < frames.length; ctr++) {
+
+	// Attach a power runnable to the appropriate frame
+	acq.attachRunnable(frames[ctr],-1,0,0, set_power(ctr));
+
+}
