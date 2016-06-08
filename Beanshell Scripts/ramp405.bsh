@@ -1,5 +1,22 @@
 /*
-Automatically ramps the 405 nm excitation during an acqusition.
+Automatically ramps the 405nm laser power during an acqusition.
+
+To use this script, simply set the first five variables to values appropriate
+for your particular acquisition.
+`laser_name` - The name of the device that Micro-Manager uses to reference it.
+`state_name` - The name of the property that switches the laser on and off.
+`power_name` - The property for the laser power.
+`frame_laser_on`  - Turn on the laser at this frame
+`frame_laser_off` - Turn off the laser at this frame
+
+In addition, you can set an array of frames and powers for changing the laser
+power during an acquisition. To do this, edit the `frames` and `powers` array.
+For example, if `int [] frames = new int[] {1000, 2000};` and
+`double [] powers = new double [] {5, 10};`, then the laser power will be set to
+5 at frame 1000 and to 10 at frame 2000.
+
+In case that the on/off states are not equal to `0` and `1`, you may need to
+change the values of the variables `off_state` and `on_state`.
 
 AUTHOR: Kyle M. Douglass, http://kmdouglass.github.io
 
@@ -21,6 +38,8 @@ double [] powers = new double [] {1, 2, 1};
 // Code below this line not intended for modification
 int off_state = 0;
 int on_state  = 1;
+
+// TODO: Add assertion that frames and powers have the same length
 
 acq.clearRunnables();
 
