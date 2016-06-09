@@ -130,7 +130,8 @@ int MinDeviceProperty::Initialize()
     std::vector<std::string> commands;
     commands.push_back("Off");
     commands.push_back("On");
-    SetAllowedValues("Laser Operation Select", commands);
+	// BE SURE THE NAME MATCHES THE PROPERTY!
+    SetAllowedValues("Switch On/Off", commands);
 
    // synchronize all properties
    // --------------------------
