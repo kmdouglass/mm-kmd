@@ -175,7 +175,7 @@ int MinDeviceProperty::OnSwitchOnOff(MM::PropertyBase* pProp, MM::ActionType eAc
 	}
 	else if (eAct == MM::AfterSet)
 	{
-		pProp->Get(answer); // Note that answer is reference to a std::string
+		pProp->Get(answer); // answer is reference to a std::string
 		if (answer == "Off") {deviceOn_ = false;}
 		else if (answer == "On") {deviceOn_ = true;}
 		else {return DEVICE_ERR;}
