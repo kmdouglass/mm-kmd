@@ -1,0 +1,41 @@
+/*
+Acquistion protocol for a single channel widefield + STORM acqusition.
+
+The standard acquisition is used to snap a single widefield image of a 
+field of view (FOV), followed by a STORM acquisition of the same FOV
+in the same channel as that of the widefield image.
+
+AUTHOR: Kyle M. Douglass, http://kmdouglass.github.io
+
+COPYRIGHT:     ECOLE POLYTECHNIQUE FEDERALE DE LAUSANNE, Switzerland
+               Laboratory of Experimental Biophysics (LEB), 2016
+*/
+
+/* Parameters to set before acquisition */
+int storm_int     = 10;  // camera integration time for STORM, ms
+int wf_int        = 10;  // camera integration time for widefield images, ms
+
+float storm_power = 800; // laser power set point for STORM, mW
+float wf_power    = 200; // power set point for widefield imaging, mW
+
+int wait_time_laser   = 5000; // time to wait for the laser to adjust its power
+int wait_time_shutter = 500; // time to wait for shutter vibrations to dissipate
+
+//public static final String WF_NAME = "HeLa_Control"; // name of widefield images
+
+/* Device parameters */
+boolean filter_up  = true;
+boolean focus_lock = false;
+boolean shutter_up = true;
+
+/* Primary acquisition script */
+
+// Lock autofocus
+if ("Unlock Focus".equals(mmc.getProperty("pgFocus-Stabilization", "Focus Mode"))) {
+	mmc.setProperty("pgFocus-Stabilization", "Focus Mode", "Lock Focus");
+}
+
+// Set the ND filter to "up" for widefield imaging
+if (mmc.getProperty("Arduino-Switch", "State") != 0) {
+	mmc.setProperty("Arduino-Switch", "State", 0);
+}
