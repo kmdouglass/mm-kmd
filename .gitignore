@@ -1,2 +1,3 @@
 *.sdf
 Build\ Environment/*
+*test.cfg
