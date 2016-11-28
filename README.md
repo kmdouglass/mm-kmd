@@ -12,7 +12,7 @@ The scripts in the [Beanshell Scripts](https://github.com/kmdouglass/Micro-Manag
 Files inside [Build Environment](https://github.com/kmdouglass/Micro-Manager/tree/master/Build%20Environment/) are primarily C++ projects for custom device adapters, plug-in's, etc. Compiling the code requires setting up a [Micro-Manager build environment](https://micro-manager.org/wiki/Building_Micro-Manager_Device_Adapters) on your own system.
 
 ## Micro-Manager Versions and Operating System
-These scripts were developed for Micro-Manager 1.4.22 and Windows 7. I provide no guarantee that they will work with other versions of Micro-Manager or on other operating systems.
+These scripts were developed for Micro-Manager 1.4.22 and 1.4.23 on 64-bit Windows 7. I provide no guarantee that they will work with other versions of Micro-Manager or on other operating systems.
 
 ## Feedback
 I welcome feedback of any kind. You may e-mail me at kyle.m.douglass@gmail.com or submit problems to the [issue tracker](https://github.com/kmdouglass/Micro-Manager/issues).
