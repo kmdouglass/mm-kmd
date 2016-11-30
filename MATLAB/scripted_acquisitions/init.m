@@ -18,6 +18,9 @@ SERIALNUM_SHUTTER = 85855448; % Serial number of the shutter
 global g_h; g_h = struct(); % Device handles
 global g_f; g_f = struct(); % Figure handles
 global g_nameMap;
+global g_gui;
+global g_mmc;
+global g_acq;
 global g_engineInitialized;
 global g_stepFields;
 
@@ -30,8 +33,6 @@ utils.initScriptEngine()
 fpos    = get(0,'DefaultFigurePosition');
 fpos(3) = 650; % Figure window width
 fpos(4) = 450; % Height
-
-% TODO: Assign field names using the names in g_nameMap
 
 % Load ActiveX control for the filter wheel
 % 'initFunc', 'MoveHome(0,0)' homes the filter wheel during initialization.
@@ -54,6 +55,6 @@ clear fpos; % Clean-up
 %% Launch Micro-Manager GUI
 % StartMMStudio.m is included with Micro-Manager Windows installs
 path(MM_DIR, path);
-gui = StartMMStudio(MM_DIR);
-mmc = gui.getCore;
-acq = gui.getAcquisitionEngine;
+g_gui = StartMMStudio(MM_DIR);
+g_mmc = g_gui.getCore;
+g_acq = g_gui.getAcquisitionEngine;

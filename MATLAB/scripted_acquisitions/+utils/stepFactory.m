@@ -42,11 +42,6 @@ function step = stepFactory(device, command, params, varargin)
 % pauseAfter    : numeric
 %   The same as pauseBefore, but after executing the command.
 %   Default: 0
-% execCondition : cell array
-%   A cell array with three elements: a device, a device property, and a
-%   value that the property must have for the command to be executed. This
-%   condition must be true at the time immediately before the command is to
-%   be executed. Default: {}
 %
 % Returns
 % -------
@@ -56,6 +51,8 @@ function step = stepFactory(device, command, params, varargin)
 
 global g_engineInitialized;
 global g_nameMap;
+global g_gui;
+global g_mmc;
 
 %% Initialize factory if not yet initialized
 if ~g_engineInitialized
@@ -69,37 +66,78 @@ addRequired(p, 'command', @ischar);
 addRequired(p, 'params');
 addParameter(p, 'pauseBefore', 0);
 addParameter(p, 'pauseAfter', 0);
-addParameter(p, 'execCondition', {});
 parse(p, device, command, params, varargin{:});
 
 %% Convert the command into one that is executable
+% Make input command case insensitive
+cmd = lower(p.Results.command);
 switch p.Results.device
+    %================
+    % Camera Commands
+    %================
+    case 'Camera'
+        name = g_nameMap('Camera');
+        switch cmd
+            case 'set exposure'
+                expTime = p.Results.params; % Exposure time in milliseconds
+                step.cmd = ['g_gui.setExposure(' num2str(expTime) ')'];
+            otherwise
+                commandError(p.Results.device, p.Results.command);
+        end
+        
     %======================
     % Filter Wheel Commands
     %======================
     case 'Filter Wheel'
         name = g_nameMap('Filter Wheel');
-        fPos647 = 0;
-        fPos488 = 120;
-        fPos750 = 240;
-        switch p.Results.command
-            
-            % 240 -> 750 filter
-            case 'Move to 647 filter'
-                step.cmd = ['g_h.' name '.SetAbsMovePos(0, ' num2str(fPos647) ');' ...   
+        switch cmd
+            case 'move filter'
+                if p.Results.params == 647
+                    fPos = 0;   % Physical position of 647 filter
+                elseif p.Results.params == 488
+                    fPos = 120; % Physical position of 488 filter
+                elseif p.Results.params == 750
+                    fPos = 240; % Physical position of 750 filter
+                end
+                
+                step.cmd = ['g_h.' name '.SetAbsMovePos(0, ' ...
+                            num2str(fPos) ');' ...   
                             'g_h.' name '.MoveAbsolute(0, 0);'];
-            case 'Move to 488 filter'
-                step.cmd = ['g_h.' name '.SetAbsMovePos(0, ' num2str(fPos488) ');' ...
-                            'g_h.' name '.MoveAbsolute(0, 0);'];
-            case 'Move to 750 filter'
-                step.cmd = ['g_h.' name '.SetAbsMovePos(0, ' num2str(fPos750) ');' ...
-                            'g_h.' name '.MoveAbsolute(0, 0);'];
-            case 'Move home'
+            case 'move home'
                 step.cmd = ['g_h.' name '.MoveHome(0,0);'];
             otherwise
                 commandError(p.Results.device, p.Results.command);
         end
+    %===================    
+    % ND Filter Commands
+    % ==================
+    case 'ND Filter'
+        name = g_nameMap('ND Filter');
+        switch cmd
+            case 'move up'
+                step.cmd = ['g_mmc.setProperty(''' name ''', ''Label'','...
+                            '''ND Filter Up'')'];
+            case 'move down'
+                step.cmd = ['g_mmc.setProperty(''' name ''', ''Label'','...
+                            '''ND Filter Down'')'];
+            otherwise
+                commandError(p.Results.device, p.Results.command);
+        end
+
+    otherwise
+        deviceError(p.Results.device);
 end
+
+%% Add pauses before and after the command executes if they exist
+step.pauseBefore = p.Results.pauseBefore;
+step.pauseAfter  = p.Results.pauseAfter;
+
+end
+
+function deviceError(device)
+% Raises an error when the device is not recognized.
+msg = [device ' is not a recognized device.'];
+error(msg)
 end
 
 function commandError(device, command)
