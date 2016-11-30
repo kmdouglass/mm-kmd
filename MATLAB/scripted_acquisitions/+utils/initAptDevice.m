@@ -13,7 +13,7 @@ function [devHandle, figHandle] = launchAptDevice(                      ...
 %
 % Parameters
 % ----------
-% progid       : char
+% progid       : char array
 %   The programmatic identifier for the device.
 % serialNumber : uint32
 %   The device's serial number; usually found on the device itself prefixed
@@ -21,15 +21,19 @@ function [devHandle, figHandle] = launchAptDevice(                      ...
 %
 % Optional Name/Value Parameters
 % ------------------------------
-% initFunc : char
+% initFunc : char array
 %   A string representing a device function that is called to initialize
 %   the device. For example, a filter wheel should be homed before use, so
 %   the function that homes the device can be passed here. For the Thorlabs
 %   BSC 201 controller, pass 'MoveHome(0,0)' to home the device.
-% figName  : char
+%   Default: ''
+% figName  : char array
 %   The name of the figure window holding the control.
-% fpos     : array of numeric
+%   Default: 'APT Device'
+% fpos     : numeric array
 %   [x, y, width, height] of the figure window.
+%   Default: get(0, 'DefaultFigurePosition') for x, y; 650, 450 for width,
+%            height
 
 %% Parse the input arguments
 % Default figure position and size

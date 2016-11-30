@@ -1,3 +1,4 @@
 *.sdf
 Build\ Environment/*
 *test.cfg
+*.asv
