@@ -108,6 +108,25 @@ switch p.Results.device
             otherwise
                 commandError(p.Results.device, p.Results.command);
         end
+        
+    %==============
+    % MPB Laser 642
+    %==============
+    case 'MPB Laser 642'
+        name = g_nameMap('MPB Laser 642');
+        cmdTerminator = '\r';
+        ansTerminator = '\rD >'; % D > indicates a successful cmd
+        switch cmd
+            case 'turn on'
+                step.cmd = ['g_mmc.setSerialPortCommand(''' name ''', ''SETLDENABLE 1'', sprintf(''' cmdTerminator '''));' ...
+                            'g_mmc.getSerialPortAnswer(''' name  ''', sprintf(''' ansTerminator '''));'];
+            case 'turn off'
+                step.cmd = ['g_mmc.setSerialPortCommand(''' name ''', ''SETLDENABLE 0'', sprintf(''' cmdTerminator '''));' ...
+                            'g_mmc.getSerialPortAnswer(''' name  ''', sprintf(''' ansTerminator '''));'];
+            otherwise
+                commandError(p.Results.device, p.Results.command);
+        end
+        
     %===================    
     % ND Filter Commands
     % ==================
