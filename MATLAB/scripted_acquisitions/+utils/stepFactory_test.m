@@ -71,6 +71,12 @@ pause(2);
 currState = g_mmc.getProperty(g_nameMap('ND Filter'), 'Label');
 assert(strcmp(currState, 'ND Filter Down'));
 
+step = utils.stepFactory('ND Filter', 'move up', []);
+eval(step.cmd);
+pause(2);
+currState = g_mmc.getProperty(g_nameMap('ND Filter'), 'Label');
+assert(strcmp(currState, 'ND Filter Up'));
+
 %% Test 5: Turn on 642 laser, set the power, then turn it off
 port = 'COM10';
 cmdTerminator = sprintf('\r');
@@ -109,3 +115,18 @@ g_mmc.setSerialPortCommand(port, 'GETLDENABLE', cmdTerminator);
 answer = g_mmc.getSerialPortAnswer(port, ansTerminator);
 pause(0.05);
 assert(str2num(answer) == 0);
+
+%% Test 6: Run a test acquisition
+params = struct();
+params.rootName  = 'H:\test';
+params.dirName   = 'test_acq';
+params.numFrames = 50;
+params.interval  = 20; % milliseconds
+
+% Make the directory if it doesn't exist
+[s, mess, messid] = mkdir(params.rootName);
+step = utils.stepFactory('Acquisition Engine','start acquisition', params);
+
+% TODO!!!!!!!!!!!!!!!!
+% Close acquisition window, check that the acquisition succeeded, remove
+% the test folder

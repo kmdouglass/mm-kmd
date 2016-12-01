@@ -53,6 +53,7 @@ global g_engineInitialized;
 global g_nameMap;
 global g_gui;
 global g_mmc;
+global g_acq;
 
 %% Initialize factory if not yet initialized
 if ~g_engineInitialized
@@ -72,9 +73,41 @@ parse(p, device, command, params, varargin{:});
 % Make input command case insensitive
 cmd = lower(p.Results.command);
 switch p.Results.device
-    %================
-    % Camera Commands
-    %================
+    %===================
+    % Acquisition Engine
+    %===================
+    case 'Acquisition Engine'
+        switch cmd
+            case 'start acquisition'
+                params   = p.Results.params;
+                try
+                    % Unpack the Multi-D Acquisition parameters
+                    rootName  = params.rootName;
+                    dirName   = params.dirName;
+                    numFrames = params.numFrames;
+                    interval  = params.interval;
+                catch ME
+                    if strcmp(ME.identifier, 'MATLAB:nonExistentField')
+                        error(['The params struct for the Acquisition '...
+                               'Engine is missing a field.']);
+                    else
+                        rethrow(ME);
+                    end
+                end
+                
+                % Launch the acquisition
+                step.cmd = ['g_acq.setRootName(''' rootName ''');' ...
+                            'g_acq.setDirName(''' dirName ''');'   ...
+                            'g_acq.setFrames(' num2str(numFrames)  ...
+                            ', ' num2str(interval) ');'            ...
+                            'g_acq.acquire();'];
+            otherwise
+                commandError(p.Results.device, p.Results.command);
+        end
+    
+    %=======
+    % Camera
+    %=======
     case 'Camera'
         name = g_nameMap('Camera');
         switch cmd
