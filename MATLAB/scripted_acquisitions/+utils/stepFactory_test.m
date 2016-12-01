@@ -70,3 +70,42 @@ eval(step.cmd);
 pause(2);
 currState = g_mmc.getProperty(g_nameMap('ND Filter'), 'Label');
 assert(strcmp(currState, 'ND Filter Down'));
+
+%% Test 5: Turn on 642 laser, set the power, then turn it off
+port = 'COM10';
+cmdTerminator = sprintf('\r');
+ansTerminator = sprintf('\rD >');
+
+% Turn laser on
+step = utils.stepFactory('MPB Laser 642', 'turn on', []);
+eval(step.cmd);
+pause(8);
+g_mmc.setSerialPortCommand(port, 'GETLDENABLE', cmdTerminator);
+answer = g_mmc.getSerialPortAnswer(port, ansTerminator);
+pause(0.05);
+assert(str2num(answer) == 1);
+
+% Set power to 300 mW
+step = utils.stepFactory('MPB Laser 642', 'set power', 300);
+eval(step.cmd);
+pause(1);
+g_mmc.setSerialPortCommand(port, 'GETPOWER 0', cmdTerminator);
+answer = g_mmc.getSerialPortAnswer(port, ansTerminator);
+assert(str2num(answer) == 300);
+
+% Set power to 200 mW
+step = utils.stepFactory('MPB Laser 642', 'set power', 200);
+eval(step.cmd);
+pause(2);
+g_mmc.setSerialPortCommand(port, 'GETPOWER 0', cmdTerminator);
+answer = g_mmc.getSerialPortAnswer(port, ansTerminator);
+assert(str2num(answer) == 200);
+
+% Turn laser off
+step = utils.stepFactory('MPB Laser 642', 'turn off', []);
+eval(step.cmd);
+pause(8);
+g_mmc.setSerialPortCommand(port, 'GETLDENABLE', cmdTerminator);
+answer = g_mmc.getSerialPortAnswer(port, ansTerminator);
+pause(0.05);
+assert(str2num(answer) == 0);
