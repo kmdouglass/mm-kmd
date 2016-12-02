@@ -61,6 +61,9 @@ if ~g_engineInitialized
 end
 
 %% Parse the input arguments
+% Attach the device name to the params struct
+params.name = g_nameMap(device);
+
 p = inputParser;
 addRequired(p, 'device', @ischar);
 addRequired(p, 'command', @ischar);
@@ -107,8 +110,6 @@ switch p.Results.device
     % Filter Wheel Commands
     %======================
     case 'Filter Wheel'
-        params      = p.Results.params;
-        params.name = g_nameMap('Filter Wheel');
         switch cmd
             case 'move filter'
                 step.cmd = steps.filter_wheel.move_filter(params);
@@ -122,29 +123,13 @@ switch p.Results.device
     % MPB Laser 642
     %==============
     case 'MPB Laser 642'
-        name = g_nameMap('MPB Laser 642');
-        cmdTerminator = '\r';
-        ansTerminator = '\rD >'; % D > indicates a successful cmd
         switch cmd
             case 'turn on'
-                step.cmd = ['g_mmc.setSerialPortCommand(''' name ''', ' ...
-                            '''SETLDENABLE 1'', sprintf('''             ...
-                            cmdTerminator '''));'                       ...
-                            'g_mmc.getSerialPortAnswer(''' name  ''', ' ...
-                            'sprintf(''' ansTerminator '''));'];
+                step.cmd = steps.mpb_laser_642.turn_on(params);
             case 'turn off'
-                step.cmd = ['g_mmc.setSerialPortCommand(''' name ''', ' ...
-                            '''SETLDENABLE 0'', sprintf('''             ...
-                            cmdTerminator '''));'                       ...
-                            'g_mmc.getSerialPortAnswer(''' name  ''', ' ...
-                            'sprintf(''' ansTerminator '''));'];
+                step.cmd = steps.mpb_laser_642.turn_off(params);
             case 'set power'
-                power = p.Results.params;
-                step.cmd = ['g_mmc.setSerialPortCommand(''' name ''', ' ...
-                            '''SETPOWER 0 ' num2str(power) ''', '       ...
-                            'sprintf(''' cmdTerminator '''));'          ...
-                            'g_mmc.getSerialPortAnswer(''' name  ''', ' ...
-                            'sprintf(''' ansTerminator '''));'];
+                step.cmd = steps.mpb_laser_642.set_power(params);
             otherwise
                 commandError(p.Results.device, p.Results.command);
         end
@@ -153,14 +138,9 @@ switch p.Results.device
     % ND Filter Commands
     % ==================
     case 'ND Filter'
-        name = g_nameMap('ND Filter');
         switch cmd
-            case 'move up'
-                step.cmd = ['g_mmc.setProperty(''' name ''', ''Label'','...
-                            '''ND Filter Up'')'];
-            case 'move down'
-                step.cmd = ['g_mmc.setProperty(''' name ''', ''Label'','...
-                            '''ND Filter Down'')'];
+            case 'move'
+                step.cmd = steps.nd_filter.move(params);
             otherwise
                 commandError(p.Results.device, p.Results.command);
         end

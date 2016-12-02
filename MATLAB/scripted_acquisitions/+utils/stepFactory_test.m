@@ -66,21 +66,24 @@ assert(currPos == fpos750);
 step = utils.stepFactory('Filter Wheel', 'move home', []);
 step.cmd();
 
-%% Test 4: Raise and lower the filter wheel
-step = utils.stepFactory('ND Filter', 'move up', []);
-eval(step.cmd);
+%% Test 4: Raise and lower the ND filter
+params.pos = 'up';
+step = utils.stepFactory('ND Filter', 'move', params);
+step.cmd();
 pause(2);
 currState = g_mmc.getProperty(g_nameMap('ND Filter'), 'Label');
 assert(strcmp(currState, 'ND Filter Up'));
 
-step = utils.stepFactory('ND Filter', 'move down', []);
-eval(step.cmd);
+params.pos = 'down';
+step = utils.stepFactory('ND Filter', 'move', params);
+step.cmd();
 pause(2);
 currState = g_mmc.getProperty(g_nameMap('ND Filter'), 'Label');
 assert(strcmp(currState, 'ND Filter Down'));
 
-step = utils.stepFactory('ND Filter', 'move up', []);
-eval(step.cmd);
+params.pos = 'up';
+step = utils.stepFactory('ND Filter', 'move', params);
+step.cmd();
 pause(2);
 currState = g_mmc.getProperty(g_nameMap('ND Filter'), 'Label');
 assert(strcmp(currState, 'ND Filter Up'));
@@ -91,8 +94,9 @@ cmdTerminator = sprintf('\r');
 ansTerminator = sprintf('\rD >');
 
 % Turn laser on
-step = utils.stepFactory('MPB Laser 642', 'turn on', []);
-eval(step.cmd);
+params = struct();
+step = utils.stepFactory('MPB Laser 642', 'turn on', params);
+step.cmd();
 pause(8);
 g_mmc.setSerialPortCommand(port, 'GETLDENABLE', cmdTerminator);
 answer = g_mmc.getSerialPortAnswer(port, ansTerminator);
@@ -100,16 +104,18 @@ pause(0.05);
 assert(str2num(answer) == 1);
 
 % Set power to 300 mW
-step = utils.stepFactory('MPB Laser 642', 'set power', 300);
-eval(step.cmd);
+params.power = 300;
+step = utils.stepFactory('MPB Laser 642', 'set power', params);
+step.cmd();
 pause(1);
 g_mmc.setSerialPortCommand(port, 'GETPOWER 0', cmdTerminator);
 answer = g_mmc.getSerialPortAnswer(port, ansTerminator);
 assert(str2num(answer) == 300);
 
 % Set power to 200 mW
-step = utils.stepFactory('MPB Laser 642', 'set power', 200);
-eval(step.cmd);
+params.power = 200;
+step = utils.stepFactory('MPB Laser 642', 'set power', params);
+step.cmd();
 pause(2);
 g_mmc.setSerialPortCommand(port, 'GETPOWER 0', cmdTerminator);
 answer = g_mmc.getSerialPortAnswer(port, ansTerminator);
@@ -117,7 +123,7 @@ assert(str2num(answer) == 200);
 
 % Turn laser off
 step = utils.stepFactory('MPB Laser 642', 'turn off', []);
-eval(step.cmd);
+step.cmd();
 pause(8);
 g_mmc.setSerialPortCommand(port, 'GETLDENABLE', cmdTerminator);
 answer = g_mmc.getSerialPortAnswer(port, ansTerminator);
@@ -169,16 +175,16 @@ assert(fileExists);
 % of MM has been closed.
 
 clear params
-params.folder   = ['C:\Users\laboleb\Desktop\delete_me_' ...
-                   num2str(randi([1e5, 999999]))];
-params.filename = 'WF_test';
-
-step = utils.stepFactory(...
-    'Acquisition Engine','snap widefield image', params);
-step.cmd();
-
-% Check that the file exists
-imgData = fullfile(params.folder, [params.filename '_1' ], ...
-                   [params.filename '_1_MMStack_Pos0.ome.tif']);
-fileExists = logical(exist(imgData, 'file'));
-assert(fileExists)
+% params.folder   = ['C:\Users\laboleb\Desktop\delete_me_' ...
+%                    num2str(randi([1e5, 999999]))];
+% params.filename = 'WF_test';
+% 
+% step = utils.stepFactory(...
+%     'Acquisition Engine','snap widefield image', params);
+% step.cmd();
+% 
+% % Check that the file exists
+% imgData = fullfile(params.folder, [params.filename '_1' ], ...
+%                    [params.filename '_1_MMStack_Pos0.ome.tif']);
+% fileExists = logical(exist(imgData, 'file'));
+% assert(fileExists)
