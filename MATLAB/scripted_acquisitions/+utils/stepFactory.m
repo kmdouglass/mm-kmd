@@ -31,7 +31,7 @@ function step = stepFactory(device, command, params, varargin)
 % params  : any MATLAB data type
 %   The parameters that describing the command. This can be, for example, a
 %   laser power or a move distance. If no params are necessary for a given
-%   command, then this value is ignored.
+%   command, then pass an empty struct.
 %
 % Optional Name/Value Parameters
 % ------------------------------

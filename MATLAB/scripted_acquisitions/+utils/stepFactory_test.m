@@ -175,16 +175,16 @@ assert(fileExists);
 % of MM has been closed.
 
 clear params
-% params.folder   = ['C:\Users\laboleb\Desktop\delete_me_' ...
-%                    num2str(randi([1e5, 999999]))];
-% params.filename = 'WF_test';
-% 
-% step = utils.stepFactory(...
-%     'Acquisition Engine','snap widefield image', params);
-% step.cmd();
-% 
-% % Check that the file exists
-% imgData = fullfile(params.folder, [params.filename '_1' ], ...
-%                    [params.filename '_1_MMStack_Pos0.ome.tif']);
-% fileExists = logical(exist(imgData, 'file'));
-% assert(fileExists)
+params.folder   = ['C:\Users\laboleb\Desktop\Temp\delete_me_' ...
+                   num2str(randi([1e5, 999999]))];
+params.filename = 'WF_test';
+
+step = utils.stepFactory(...
+    'Acquisition Engine','snap widefield image', params);
+step.cmd();
+
+% Check that the file exists
+imgData = fullfile(params.folder, [params.filename '_1' ], ...
+                   [params.filename '_1_MMStack_Pos0.ome.tif']);
+fileExists = logical(exist(imgData, 'file'));
+assert(fileExists)

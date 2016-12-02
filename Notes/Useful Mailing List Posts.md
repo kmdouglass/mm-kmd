@@ -34,4 +34,12 @@ gui.closeAcquisition(acqName);
 The OP asked how to programmatically initiate a high speed acquisition and
 process the images as they arrived in the cache.
 
+## Misc.
 
+### [BigTiff support?](http://micro-manager.3463995.n2.nabble.com/BigTiff-support-td7580735.html)
+
++ ** Original Poster** : Grant Harris
++ **Date** : 2013-08-24
+
+A pretty good and lengthy discussion about the possibility of MM supporting
+larger container formats in the future.
