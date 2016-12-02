@@ -17,8 +17,9 @@
 
 global g_h;
 global g_nameMap;
-global g_mmc;
 global g_gui;
+global g_mmc;
+global g_acq;
 
 %% Test 1: Set the camera exposure time to 50 ms and then to 10 ms
 step = utils.stepFactory('Camera', 'set exposure', 50);
@@ -116,17 +117,61 @@ answer = g_mmc.getSerialPortAnswer(port, ansTerminator);
 pause(0.05);
 assert(str2num(answer) == 0);
 
-%% Test 6: Run a test acquisition
+%% Test 6: Run a test STORM acquisition
 params = struct();
-params.rootName  = 'H:\test';
+params.rootName  = ['H:\test_' num2str(randi([1e5, 999999]))];
 params.dirName   = 'test_acq';
 params.numFrames = 50;
 params.interval  = 20; % milliseconds
 
 % Make the directory if it doesn't exist
 [s, mess, messid] = mkdir(params.rootName);
-step = utils.stepFactory('Acquisition Engine','start acquisition', params);
+step = utils.stepFactory(...
+    'Acquisition Engine','start STORM acquisition', params);
+eval(step.cmd);
 
-% TODO!!!!!!!!!!!!!!!!
-% Close acquisition window, check that the acquisition succeeded, remove
-% the test folder
+acqName = char(g_gui.getAcquisitionNames());
+disp('Test acquisition is running.');
+
+% Wait for the acquisition to finish
+while g_acq.isAcquisitionRunning()
+    disp('Test acquisition is still running.');
+    pause(1);
+    continue;
+end
+disp('Test acquisition has finished.');
+pause(2);
+g_gui.closeAcquisitionWindow(acqName);
+
+% Assert that the folder exists and contains image data.
+% This assumes that MM has appended a '_1' to the dirName.
+fullDir      = fullfile(params.rootName, [params.dirName '_1']);
+folderExists = logical(exist(fullDir, 'dir'));
+assert(folderExists);
+
+imgData    = fullfile(fullDir, [params.dirName '_1_MMStack_Pos0.ome.tif']);
+fileExists = logical(exist(imgData, 'file'));
+assert(fileExists);
+
+% 's' argument deletes folder and contents.
+[status, message, messageid] = rmdir(params.rootName,'s');
+
+%% Test 7: Snap a test widefield image
+% NOTE: MM does not release handles to single images that have been
+% snapped. The test image therefore needs to be deleted after this session
+% of MM has been closed.
+
+clear params
+params.folder   = ['C:\Users\laboleb\Desktop\delete_me_' ...
+                   num2str(randi([1e5, 999999]))];
+params.filename = 'WF_test';
+
+step = utils.stepFactory(...
+    'Acquisition Engine','snap widefield image', params);
+eval(step.cmd);
+
+% Check that the file exists
+imgData = fullfile(params.folder, [params.filename '_1' ], ...
+                   [params.filename '_1_MMStack_Pos0.ome.tif']);
+fileExists = logical(exist(imgData, 'file'));
+assert(fileExists)

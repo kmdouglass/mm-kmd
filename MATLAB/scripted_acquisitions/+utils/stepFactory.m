@@ -78,8 +78,8 @@ switch p.Results.device
     %===================
     case 'Acquisition Engine'
         switch cmd
-            case 'start acquisition'
-                params   = p.Results.params;
+            case 'start storm acquisition'
+                params = p.Results.params;
                 try
                     % Unpack the Multi-D Acquisition parameters
                     rootName  = params.rootName;
@@ -88,8 +88,13 @@ switch p.Results.device
                     interval  = params.interval;
                 catch ME
                     if strcmp(ME.identifier, 'MATLAB:nonExistentField')
-                        error(['The params struct for the Acquisition '...
-                               'Engine is missing a field.']);
+                        error(['The params struct for the STORM '...
+                               'Acquisition Engine is missing a field.']);
+                    elseif strcmp(id, 'MATLAB:structRefFromNonStruct')
+                        error(sprintf(['This step requires a struct as '...
+                              'a parameter.\n'...
+                              'Device: Acquisition Engine\n' ...
+                              'Command: Start STORM acquisition']));
                     else
                         rethrow(ME);
                     end
@@ -101,6 +106,37 @@ switch p.Results.device
                             'g_acq.setFrames(' num2str(numFrames)  ...
                             ', ' num2str(interval) ');'            ...
                             'g_acq.acquire();'];
+            
+            case 'snap widefield image'
+                params = p.Results.params;
+                try
+                    % Unpack the acquisition parameters from params struct
+                    filename = params.filename;
+                    folder   = params.folder;
+                catch ME
+                    id = ME.identifier;
+                    if strcmp(id, 'MATLAB:nonExistentField')
+                        error(['The params struct for the snapping a '...
+                               'widefield image is missing a field.']);
+                    elseif strcmp(id, 'MATLAB:structRefFromNonStruct')
+                        error(sprintf(['This step requires a struct as '...
+                              'a parameter.\n'...
+                              'Device: Acquisition Engine\n' ...
+                              'Command: Snap widefield image']));
+                    else
+                        rethrow(ME);
+                    end
+                end
+                % Snap the image and save it to disk
+                % openAcquisition(...false, true) -> show false, save true
+                step.cmd = [...
+                    'acqName=char(g_gui.getUniqueAcquisitionName('''    ...
+                        filename '''));'                                ...
+                    'g_gui.openAcquisition(acqName, ''' folder ''','    ...
+                        '1,1,1,1, false, true);'                        ...
+                    'g_gui.snapAndAddImage(acqName,0,0,0,0);'           ...
+                    'g_gui.closeAcquisition(acqName);'];
+                    
             otherwise
                 commandError(p.Results.device, p.Results.command);
         end
