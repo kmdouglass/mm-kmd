@@ -22,42 +22,49 @@ global g_mmc;
 global g_acq;
 
 %% Test 1: Set the camera exposure time to 50 ms and then to 10 ms
-step = utils.stepFactory('Camera', 'set exposure', 50);
-eval(step.cmd);
+clear params
+params.expTime = 50;
+step = utils.stepFactory('Camera', 'set exposure', params);
+step.cmd()
 pause(0.5);
 assert(g_mmc.getExposure() == 50);
 
-step = utils.stepFactory('Camera', 'set exposure', 10);
-eval(step.cmd);
+params.expTime = 10;
+step = utils.stepFactory('Camera', 'set exposure', params);
+step.cmd()
 pause(0.5);
 assert(g_mmc.getExposure() == 10);
 
 %% Test 2: Move the filter wheel through its filter positions
+clear params
 fpos647 = 0;
 fpos488 = 120;
 fpos750 = 240;
 
-step = utils.stepFactory('Filter Wheel', 'move filter', 647);
-eval(step.cmd);
+params.filterWavelength = 647;
+step = utils.stepFactory('Filter Wheel', 'move filter', params);
+step.cmd();
 pause(2);
 currPos = round(g_h.(g_nameMap('Filter Wheel')).GetPosition_Position(0));
 assert(currPos == fpos647);
 
-step = utils.stepFactory('Filter Wheel', 'move filter', 488);
-eval(step.cmd);
+params.filterWavelength = 488;
+step = utils.stepFactory('Filter Wheel', 'move filter', params);
+step.cmd();
 pause(2);
 currPos = round(g_h.(g_nameMap('Filter Wheel')).GetPosition_Position(0));
 assert(currPos == fpos488);
 
-step = utils.stepFactory('Filter Wheel', 'move filter', 750);
-eval(step.cmd);
+params.filterWavelength = 750;
+step = utils.stepFactory('Filter Wheel', 'move filter', params);
+step.cmd();
 pause(2);
 currPos = round(g_h.(g_nameMap('Filter Wheel')).GetPosition_Position(0));
 assert(currPos == fpos750);
 
 %% Test 3: Home the filter wheel
 step = utils.stepFactory('Filter Wheel', 'move home', []);
-eval(step.cmd);
+step.cmd();
 
 %% Test 4: Raise and lower the filter wheel
 step = utils.stepFactory('ND Filter', 'move up', []);
@@ -128,7 +135,7 @@ params.interval  = 20; % milliseconds
 [s, mess, messid] = mkdir(params.rootName);
 step = utils.stepFactory(...
     'Acquisition Engine','start STORM acquisition', params);
-eval(step.cmd);
+step.cmd();
 
 acqName = char(g_gui.getAcquisitionNames());
 disp('Test acquisition is running.');
@@ -168,7 +175,7 @@ params.filename = 'WF_test';
 
 step = utils.stepFactory(...
     'Acquisition Engine','snap widefield image', params);
-eval(step.cmd);
+step.cmd();
 
 % Check that the file exists
 imgData = fullfile(params.folder, [params.filename '_1' ], ...
