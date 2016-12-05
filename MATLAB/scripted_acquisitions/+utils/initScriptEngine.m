@@ -27,18 +27,20 @@ g_stepFields = {'cmd', 'pauseBefore', 'pauseAfter'};
 % handle or a string-based name in another software environment, such as
 % the names of fields inside the g_h struct array or device names in
 % Micro-Manager.
-customNames = {'Filter Wheel',   ... 1
-               'Shutter',        ... 2
-               'ND Filter',      ... 3
-               'Camera',         ... 4
-               'MPB Laser 642'   ... 5
-               'Acquisition Engine'};
-hwNames     = {'fwheel',         ... 1
-               'shutter',        ... 2
-               'Arduino-Switch', ... 3
-               'Prime',          ... 4
-               'COM10',          ... 5
-               'acq'};
+customNames = {'Filter Wheel',       ... 1
+               'Shutter',            ... 2
+               'ND Filter',          ... 3
+               'Camera',             ... 4
+               'MPB Laser 642'       ... 5
+               'Acquisition Engine', ... 6
+               'pgFocus'};
+hwNames     = {'fwheel',             ... 1
+               'shutter',            ... 2
+               'Arduino-Switch',     ... 3
+               'Prime',              ... 4
+               'COM10',              ... 5
+               'acq',                ... 6
+               'pgFocus-Stabilization'};
 g_nameMap   = containers.Map(customNames, hwNames);
 
 end

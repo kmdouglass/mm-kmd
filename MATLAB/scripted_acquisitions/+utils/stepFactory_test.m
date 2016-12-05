@@ -175,6 +175,10 @@ assert(fileExists);
 % of MM has been closed.
 
 clear params
+% The folder is given a random name because widefield images cannot be
+% deleted until MM is closed. By giving it a random name, we (most likely)
+% save the image data into a fresh folder so that MM won't automatically
+% append a number to the filename's prefix.
 params.folder   = ['C:\Users\laboleb\Desktop\Temp\delete_me_' ...
                    num2str(randi([1e5, 999999]))];
 params.filename = 'WF_test';
@@ -184,7 +188,48 @@ step = utils.stepFactory(...
 step.cmd();
 
 % Check that the file exists
-imgData = fullfile(params.folder, [params.filename '_1' ], ...
-                   [params.filename '_1_MMStack_Pos0.ome.tif']);
+% There is a bug in MM+MATLAB that does not prepend the acquisition name
+% (called "Prefix" in the MM metadata) to the file the first time an image
+% is snapped for a given prefix. We therefore check for an image named
+% 'MMStack_Pos0.ome.tif'.
+imgData = fullfile(params.folder, [params.filename '' ], ...
+                   'MMStack_Pos0.ome.tif');
 fileExists = logical(exist(imgData, 'file'));
 assert(fileExists)
+
+%% Test 8: Open and close the shutter
+% I don't ask the device itself for confirmation that the shutter is open
+% because the APT ActiveX method SC_GetOPState() requires a pointer as the
+% second argument. MATLAB however thinks it requires an integer and thus
+% throws an error indicating that the matching method signature cannot be
+% found.
+
+clear params
+params = struct();
+step = utils.stepFactory('Shutter', 'open shutter', params);
+step.cmd();
+button = questdlg('Is the shutter open?');
+assert(strcmp(button, 'Yes'));
+
+step = utils.stepFactory('Shutter', 'close shutter', params);
+step.cmd();
+button = questdlg('Is the shutter closed?');
+assert(strcmp(button, 'Yes'));
+
+%% Test 9: Lock and unlock the pgFocus
+clear params
+params.lock = true;
+step = utils.stepFactory('pgFocus', 'lock focus', params);
+step.cmd()
+pause(1);
+currState = g_mmc.getProperty(g_nameMap('pgFocus'), 'Focus Mode');
+% Uncomment this line if the pgFocus can actually be locked, i.e. there is
+% a coverslip with glass and the return laser beam is clean.
+% assert(strcmp(currState, 'Lock Focus'));
+
+params.lock = false;
+step = utils.stepFactory('pgFocus', 'lock focus', params);
+step.cmd()
+pause(1);
+currState = g_mmc.getProperty(g_nameMap('pgFocus'), 'Focus Mode');
+assert(strcmp(currState, 'Unlock Focus'));

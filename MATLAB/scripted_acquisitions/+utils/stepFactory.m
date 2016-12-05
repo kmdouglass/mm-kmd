@@ -136,7 +136,7 @@ switch p.Results.device
         
     %===================    
     % ND Filter Commands
-    % ==================
+    %===================
     case 'ND Filter'
         switch cmd
             case 'move'
@@ -145,8 +145,32 @@ switch p.Results.device
                 commandError(p.Results.device, p.Results.command);
         end
 
+    %========
+    % pgFocus
+    %========
+    case 'pgFocus'
+        switch cmd
+            case 'lock focus'
+                step.cmd = steps.pgfocus.lock_focus(params);
+            otherwise
+                commandError(p.Results.device, p.Results.command);
+        end
+        
+    %========
+    % Shutter
+    %========
+    case 'Shutter'
+        switch cmd
+            case 'open shutter'
+                step.cmd = steps.shutter.open_shutter(params);
+            case 'close shutter'
+                step.cmd = steps.shutter.close_shutter(params);
+            otherwise
+                commandError(p.Results.device, p.Results.command);
+        end
+        
     otherwise
-        deviceError(p.Results.device);
+    deviceError(p.Results.device);
 end
 
 %% Add pauses before and after the command executes if they exist

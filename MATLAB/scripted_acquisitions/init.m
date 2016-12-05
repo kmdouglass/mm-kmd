@@ -45,10 +45,12 @@ fWheelName = g_nameMap('Filter Wheel');
 fpos(2) = fpos(2) - fpos(4);
 
 % Load ActiveX control for the shutter
+% 'SC_SetOperatingMode' sets the shutter mode to manual.
 shutterName = g_nameMap('Shutter');
 [g_h.(shutterName), g_f.(shutterName)] = utils.initAptDevice(...
     PROGID_SHUTTER, SERIALNUM_SHUTTER,         ...
-    'figName', 'Shutter', 'fpos', fpos);
+    'figName', 'Shutter', 'fpos', fpos,        ...
+    'initFunc', 'SC_SetOperatingMode(0,1)');
 
 clear fpos; % Clean-up
 
