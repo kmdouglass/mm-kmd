@@ -14,14 +14,18 @@ acqParams.dirName   = 'test_acq';
 acqParams.numFrames = 50;
 acqParams.interval  = 0; % milliseconds
 
+wfParams.folder = acqParams.rootName;
+wfParams.filename = [acqParams.dirName '_WF'];
+
 sf = @utils.stepFactory;
 
 script = {
 
 sf('pgFocus', 'lock focus', struct('lock', true), 'pauseAfter', 20);
 sf('Camera', 'set exposure', struct('expTime', 10), 'pauseAfter', 100)
+sf('MPB Laser 642', 'turn on', struct(), 'pauseAfter', 10000)
+sf('Acquisition Engine', 'snap widefield image', wfParams)
 sf('ND Filter', 'move', struct('pos', 'down'), 'pauseAfter', 1000)
-sf('MPB Laser 642', 'turn on', struct(), 'pauseAfter', 10000);
 sf('MPB Laser 642', 'set power', struct('power', 300), 'pauseAfter', 1000)
 sf('Acquisition Engine', 'start STORM acquisition', acqParams)
 sf('Acquisition Engine', 'wait for finish', struct())

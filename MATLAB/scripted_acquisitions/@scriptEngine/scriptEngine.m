@@ -31,6 +31,8 @@ classdef scriptEngine < handle
                 obj.pause(currStep.pauseAfter);
                 
             end
+            
+            disp('Script finished.');
         end
         
         function pause(obj, time)

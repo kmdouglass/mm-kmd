@@ -34,7 +34,7 @@ global g_acq
             pause(1);
             continue;
         end
-        disp('Acquisition finished.');
+        disp('STORM acquisition finished. Script may still be running...');
     end
 
 handle = @() deviceControl();
