@@ -7,7 +7,6 @@
 % Copyright (c) 2016 ECOLE POLYTECHNIQUE FEDERALE DE LAUSANNE, Switzerland
 % Laboratory of Experimental Biophysics (LEB)
 
-
 classdef scriptEngine < handle
     % stepEngine runs a series of steps in a scripted acquisition.
     

@@ -29,10 +29,10 @@ global g_acq
 
 %% Unpack the acquisition parameters from params struct
 try
-    rootName  = params.rootName;
-    dirName   = params.dirName;
-    numFrames = params.numFrames;
-    interval  = params.interval;
+    folder     = params.folder;
+    filename   = params.filename;
+    numFrames  = params.numFrames;
+    interval   = params.interval;
 catch ME
     if strcmp(ME.identifier, 'MATLAB:nonExistentField')
         error(['The params struct for the STORM '...
@@ -48,18 +48,18 @@ catch ME
 end
 
 p = inputParser;
-addRequired(p, 'rootName' , @ischar);
-addRequired(p, 'dirName'  , @ischar);
+addRequired(p, 'folder' , @ischar);
+addRequired(p, 'filename'  , @ischar);
 addRequired(p, 'numFrames', @isnumeric);
 addRequired(p, 'interval' , @isnumeric);
-parse(p, rootName, dirName, numFrames, interval);
+parse(p, folder, filename, numFrames, interval);
 
 %% Device control functions
     function deviceControl()
         % Type the hardware and software instructions here
         disp('Starting acquisition...');
-        g_acq.setRootName(p.Results.rootName);
-        g_acq.setDirName(p.Results.dirName);
+        g_acq.setRootName(p.Results.folder);
+        g_acq.setDirName(p.Results.filename);
         g_acq.setFrames(p.Results.numFrames, p.Results.interval);
         g_acq.acquire();
     end

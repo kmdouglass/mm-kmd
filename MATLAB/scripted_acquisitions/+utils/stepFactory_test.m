@@ -132,10 +132,10 @@ assert(str2num(answer) == 0);
 
 %% Test 6: Run a test STORM acquisition
 params = struct();
-params.rootName  = ['H:\test_' num2str(randi([1e5, 999999]))];
-params.dirName   = 'test_acq';
-params.numFrames = 50;
-params.interval  = 20; % milliseconds
+params.folder     = ['H:\test_' num2str(randi([1e5, 999999]))];
+params.filename   = 'test_acq';
+params.numFrames  = 50;
+params.interval   = 20; % milliseconds
 
 % Make the directory if it doesn't exist
 [s, mess, messid] = mkdir(params.rootName);

@@ -16,11 +16,7 @@ g_engineInitialized = true;
 end
 
 function stepFactoryInit()
-global g_stepFields;
 global g_nameMap;
-
-%% Define the fields of a step struct
-g_stepFields = {'cmd', 'pauseBefore', 'pauseAfter'};
 
 %% Define the mapping between custom device names and hardware names
 % These are applied to devices that have a variable referring to a MATLAB

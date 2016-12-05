@@ -7,15 +7,20 @@
 %
 % Test script for automated acquisitions.
 
-function script = test()
-
-acqParams.rootName  = 'H:\test';
-acqParams.dirName   = 'test_acq';
-acqParams.numFrames = 50;
-acqParams.interval  = 0; % milliseconds
-
-wfParams.folder = acqParams.rootName;
-wfParams.filename = [acqParams.dirName '_WF'];
+function script = test(acqParams, wfParams)
+% Defines a sequence of hardware steps for a STORM acquisition.
+%
+% Parameters
+% ----------
+% acqParams.folder
+% acqParams.filename
+% acqParams.numFrames
+% acqParams.interval
+% wfParams.folder
+% wfParams.filename
+%
+% Returns
+% script : cell array of steps
 
 sf = @utils.stepFactory;
 
