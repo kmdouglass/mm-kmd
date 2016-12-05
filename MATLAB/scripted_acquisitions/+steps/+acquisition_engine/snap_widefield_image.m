@@ -14,14 +14,17 @@ function handle = snap_widefield_image(params)
 %
 % Parameters
 % ----------
-% rootName  : char array
-%   The root directory containing the individual acquisition folders.
-% dirName   : char array
-%   The name of the directory where the actual data is stored.
-% numFrames : uint
-%   The number of frames in the time-series acquisition.
-% interval  : uint
-%   The time between frames (milliseconds).
+% name      : string
+%   The name of the device in the global handles structure.
+% filename  : char array
+%   The name of the image file.
+% folder    : char array
+%   Where the widefield images data will be saved.
+%
+% Returns
+% -------
+% handle : function handle
+%   A pointer to a function that executes the desired hardware commands.
 
 global g_gui
 global g_mmc

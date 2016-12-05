@@ -90,6 +90,10 @@ switch p.Results.device
                 % Snap the image and save it to disk
                 step.cmd = steps.acquisition_engine.snap_widefield_image(...
                     p.Results.params);
+                
+            case 'wait for finish'
+                step.cmd = steps.acquisition_engine.wait_for_finish(...
+                    p.Results.params);
                     
             otherwise
                 commandError(p.Results.device, p.Results.command);

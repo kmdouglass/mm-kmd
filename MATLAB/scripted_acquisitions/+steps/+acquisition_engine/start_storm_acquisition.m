@@ -57,6 +57,7 @@ parse(p, rootName, dirName, numFrames, interval);
 %% Device control functions
     function deviceControl()
         % Type the hardware and software instructions here
+        disp('Starting acquisition...');
         g_acq.setRootName(p.Results.rootName);
         g_acq.setDirName(p.Results.dirName);
         g_acq.setFrames(p.Results.numFrames, p.Results.interval);
