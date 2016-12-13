@@ -29,11 +29,13 @@ script = {
 sf('pgFocus', 'lock focus', struct('lock', true), 'pauseAfter', 20);
 sf('Camera', 'set exposure', struct('expTime', 10), 'pauseAfter', 100)
 sf('MPB Laser 642', 'turn on', struct(), 'pauseAfter', 10000)
+sf('Shutter', 'open shutter', struct())
 sf('Acquisition Engine', 'snap widefield image', wfParams)
 sf('ND Filter', 'move', struct('pos', 'down'), 'pauseAfter', 1000)
 sf('MPB Laser 642', 'set power', struct('power', 300), 'pauseAfter', 1000)
 sf('Acquisition Engine', 'start STORM acquisition', acqParams)
 sf('Acquisition Engine', 'wait for finish', struct())
+sf('Shutter', 'close shutter', struct())
 sf('MPB Laser 642', 'set power', struct('power', 200), 'pauseAfter', 1000)
 sf('MPB Laser 642', 'turn off', struct(), 'pauseAfter', 500)
 sf('ND Filter', 'move', struct('pos', 'up'), 'pauseAfter', 0)

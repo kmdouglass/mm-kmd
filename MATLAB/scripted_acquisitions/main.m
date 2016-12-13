@@ -8,7 +8,7 @@
 % STORM acquisition parameters
 acqParams.folder     = 'H:\test';
 acqParams.filename   = 'test_acq';
-acqParams.numFrames  = 50;
+acqParams.numFrames  = 2000;
 acqParams.interval   = 0; % time between frames; milliseconds
 
 % Widefield image parameters
