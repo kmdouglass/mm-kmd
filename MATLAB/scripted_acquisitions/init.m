@@ -14,7 +14,10 @@ PROGID_SHUTTER    = 'MGMOTOR.MGMotorCtrl.1';
 SERIALNUM_FWHEEL  = 40866523; % Serial number of the filter wheel
 SERIALNUM_SHUTTER = 85855448; % Serial number of the shutter
 
-% Variables
+% Local Variables (change these depending on the machine)
+pcID = 'PC1';
+
+% Global Variables
 global g_h; g_h = struct(); % Device handles
 global g_f; g_f = struct(); % Figure handles
 global g_nameMap;
@@ -22,11 +25,13 @@ global g_gui;
 global g_mmc;
 global g_acq;
 global g_engineInitialized;
-global g_stepFields;
+
+ % Struct of incoming variables from other PC
+global g_comBuffer; g_comBuffer = [];
 
 %% Initialize the script engine, including device names
 % Sets globals g_engineInitialized, g_stepFields, and g_nameMap
-utils.initScriptEngine()
+utils.initScriptEngineHelper()
 
 %% Setup Thorlabs APT devices
 % Load ActiveX control for the filter wheel

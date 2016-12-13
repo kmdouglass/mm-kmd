@@ -5,9 +5,33 @@
 % Copyright (c) 2016 ECOLE POLYTECHNIQUE FEDERALE DE LAUSANNE, Switzerland
 % Laboratory of Experimental Biophysics (LEB)
 %
-% Run this file with the command
+% Tests in this file may be executed only after initiating the scripted
+% acquisition engine with init.m.
+%
+% Run all tests in this file with the command
 %
 %   result = runtests('utils.stepFactory_test');
+%
+% Run individual tests in this file with the command
+%
+%   result = runtests(
+%     'utils.stepFactory_test',
+%     'Name', 'utils.stepFactory_test/Test1_SetCameraExposureTime');
+%
+% Replace the name with the name of desired test, dropping all spaces and
+% replacing the ':' character with '_'. The first letter of each name
+% should be capitalized when running select tests, even if it's not
+% capitalized in this file.
+%
+% A full list of names for the tests is obtained with the command
+%
+%   tests = testsuite('utils.stepFactory_test');
+%
+% Wilcards may be used, but with care. For example, the command
+%
+%   result = runtests('utils.stepFactory_test', 'Name', '*Test1*');
+%
+% will run tests 1, 10, 100, etc.
 %
 % This test is specific to the Micro-Manager configuration file
 % ht-main_Prime.cfg. Any changes to the hardware will likely require
@@ -20,8 +44,10 @@ global g_nameMap;
 global g_gui;
 global g_mmc;
 global g_acq;
+global g_comBuffer;
 
-%% Test 1: Set the camera exposure time to 50 ms and then to 10 ms
+%% Test 1: Set Camera Exposure Time
+% Set the camera exposure time to 50 ms and then to 10 ms
 clear params
 params.expTime = 50;
 step = utils.stepFactory('Camera', 'set exposure', params);
@@ -35,7 +61,8 @@ step.cmd()
 pause(0.5);
 assert(g_mmc.getExposure() == 10);
 
-%% Test 2: Move the filter wheel through its filter positions
+%% Test 2: Move Filter Wheel
+% Move the filter wheel through its filter positions
 clear params
 fpos647 = 0;
 fpos488 = 120;
@@ -233,3 +260,54 @@ step.cmd()
 pause(1);
 currState = g_mmc.getProperty(g_nameMap('pgFocus'), 'Focus Mode');
 assert(strcmp(currState, 'Unlock Focus'));
+
+%% Test 10: Poll Folder
+% Polls a selected folder for a com file.
+clear params
+
+% Empty the buffer
+g_comBuffer = [];
+
+% Place a test com file in the folder before checking for it
+comFolder   = userpath;
+comFilename = 'testPC.mat';
+pcID        = 'testPC'; % Name to insert into the pcID field of g_comBuffer
+acqParams   = [];
+message     = [];
+
+filename = fullfile(comFolder, comFilename); % File to poll for
+save(filename, 'pcID', 'acqParams', 'message');
+
+% Setup and launch the polling step
+params.comFolder   = comFolder;
+params.comFilename = comFilename;
+params.timeout     = 10000; % milliseconds
+step = utils.stepFactory('Acquisition Engine', 'poll com folder', params);
+step.cmd();
+
+pause(2);
+% Verify that the buffer contains the 'sending' PC's identifier
+disp('is this even reached?');
+
+% Empty the buffer
+g_comBuffer = [];
+
+%% Test 11: Poll Folder Timeout
+% The polling function times out if no file is found.
+clear params
+
+% Empty the buffer
+g_comBuffer = [];
+
+% Place a test com file in the folder before checking for it
+comFolder   = userpath;
+comFilename = 'testPC.mat';
+
+% Setup and launch the polling step
+params.comFolder   = comFolder;
+params.comFilename = comFilename;
+params.timeout     = 5000; % milliseconds
+step = utils.stepFactory('Acquisition Engine', 'poll com folder', params);
+step.cmd();
+
+assert(isempty(g_comBuffer)); % Buffer is empty due to timeout

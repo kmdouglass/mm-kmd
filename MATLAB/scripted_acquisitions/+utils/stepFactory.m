@@ -54,6 +54,7 @@ global g_nameMap;
 global g_gui;
 global g_mmc;
 global g_acq;
+global g_comBuffer;
 
 %% Initialize factory if not yet initialized
 if ~g_engineInitialized
@@ -76,9 +77,14 @@ parse(p, device, command, params, varargin{:});
 % Make input command case insensitive
 cmd = lower(p.Results.command);
 switch p.Results.device
-    %===================
+    %======================================================================
     % Acquisition Engine
-    %===================
+    %
+    % The Acquisition Engine is an abstraction layer for software that
+    % controls data acquisition on the microscope. It includes, for
+    % example, launching Multi-D acquisitions in Micro-Manager and two-way
+    % communications between computers.
+    %======================================================================
     case 'Acquisition Engine'
         switch cmd
             case 'start storm acquisition'
@@ -93,6 +99,10 @@ switch p.Results.device
                 
             case 'wait for finish'
                 step.cmd = steps.acquisition_engine.wait_for_finish(...
+                    p.Results.params);
+                
+            case 'poll com folder'
+                step.cmd = steps.acquisition_engine.poll_com_folder(...
                     p.Results.params);
                     
             otherwise

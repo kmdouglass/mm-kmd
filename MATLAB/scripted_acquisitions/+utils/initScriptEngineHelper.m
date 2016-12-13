@@ -1,4 +1,4 @@
-% Initializes the engine that runs a scripted acquisition.
+% Helps initialize the engine that runs a scripted acquisition.
 %
 % Author:  Kyle M. Douglass
 % E-mail:  kyle.m.douglass@gmail.com
@@ -7,7 +7,7 @@
 % Copyright (c) 2016 ECOLE POLYTECHNIQUE FEDERALE DE LAUSANNE, Switzerland
 % Laboratory of Experimental Biophysics (LEB)
 
-function initScriptEngine()
+function initScriptEngineHelper()
 stepFactoryInit()
 
 % If all initialization routines succeed, set this flag to true.
