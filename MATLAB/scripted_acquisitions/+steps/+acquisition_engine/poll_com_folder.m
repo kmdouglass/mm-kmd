@@ -67,8 +67,8 @@ filename = fullfile(p.Results.comFolder, p.Results.comFilename);
             % Break out of the loop if timeout is reached
             elapsedTime = toc;
             if (elapsedTime * 1000 >= p.Results.timeout) % timeout in ms!
-                disp('Polling timed out.');
-                break;
+                error('AquisitionEngine:PollingTimeout', ...
+                      'Polling the com folder timed out.');
             end
             
             % Check whether the com file exists; if yes, read contents of

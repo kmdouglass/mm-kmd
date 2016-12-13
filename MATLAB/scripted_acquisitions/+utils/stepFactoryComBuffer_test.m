@@ -108,7 +108,16 @@ params.comFolder   = comFolder;
 params.comFilename = comFilename;
 params.timeout     = 5000; % milliseconds
 step = utils.stepFactory('Acquisition Engine', 'poll com folder', params);
-step.cmd();
+
+try
+    step.cmd();
+catch ME
+    if ME.identifier == 'AquisitionEngine:PollingTimeout'
+        disp('Polling timeout error successfully caught.');
+    else
+        rethrow(ME);
+    end
+end
 
 assert(isempty(g_comBuffer)); % Buffer is empty due to timeout
 
