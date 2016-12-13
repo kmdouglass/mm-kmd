@@ -21,9 +21,6 @@ function handle = poll_com_folder(params)
 % timeOut     : uint
 %   The amount of time in milliseconds to wait until a timeout occurs.
 
-global g_gui
-global g_mmc
-global g_acq
 global g_comBuffer
 
 %% Unpack the acquisition parameters from params struct
@@ -52,14 +49,14 @@ addRequired(p, 'timeout', @isnumeric);
 parse(p, comFolder, comFilename, timeout);
 
 filename = fullfile(comFolder, comFilename);
+
 %% Device control functions
     function deviceControl()
         % Type the hardware and software instructions here
-        
         g_comBuffer = []; % buffer cleared
         disp('Begin polling com folder...');
         tic
-        while isempty(g_comBuffer)
+        while true
             % Break out of the loop if timeout is reached
             elapsedTime = toc;
             if (elapsedTime * 1000 >= p.Results.timeout) % timeout in ms!
@@ -74,6 +71,7 @@ filename = fullfile(comFolder, comFilename);
                 g_comBuffer = load(filename, readFields{:});
                 delete(filename);
                 disp('Message received.');
+                break;
             end
             % Continue back to top of loop
         end

@@ -285,14 +285,22 @@ params.timeout     = 10000; % milliseconds
 step = utils.stepFactory('Acquisition Engine', 'poll com folder', params);
 step.cmd();
 
-pause(2);
+% Verify that the file was deleted.
+assert(exist(filename, 'file') == 0); % 0 -> does not exist
+
+%% Test 11: Test Poll Folder
+% This actually verifies the outcome of the Test 10 because the copy of
+% g_comBuffer available to the testsuite is not updated until after the
+% test completes, which would cause the assertion below to fail if grouped
+% with the Test 10 code.
+
 % Verify that the buffer contains the 'sending' PC's identifier
-disp('is this even reached?');
+assert(strcmp('testPC', g_comBuffer.pcID));
 
 % Empty the buffer
 g_comBuffer = [];
 
-%% Test 11: Poll Folder Timeout
+%% Test 12: Poll Folder Timeout
 % The polling function times out if no file is found.
 clear params
 

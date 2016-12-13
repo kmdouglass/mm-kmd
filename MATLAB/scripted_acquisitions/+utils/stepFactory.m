@@ -49,17 +49,11 @@ function step = stepFactory(device, command, params, varargin)
 %   A structure with the fields specified in initScriptEngine.m in the
 %   g_stepFields array.
 
-global g_engineInitialized;
 global g_nameMap;
 global g_gui;
 global g_mmc;
 global g_acq;
 global g_comBuffer;
-
-%% Initialize factory if not yet initialized
-if ~g_engineInitialized
-    utils.initScriptEngine()
-end
 
 %% Parse the input arguments
 % Attach the device name to the params struct

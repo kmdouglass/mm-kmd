@@ -24,14 +24,13 @@ global g_nameMap;
 global g_gui;
 global g_mmc;
 global g_acq;
-global g_engineInitialized;
 
  % Struct of incoming variables from other PC
 global g_comBuffer; g_comBuffer = [];
 
 %% Initialize the script engine, including device names
 % Sets globals g_engineInitialized, g_stepFields, and g_nameMap
-utils.initScriptEngineHelper()
+utils.initScriptEngineHelper();
 
 %% Setup Thorlabs APT devices
 % Load ActiveX control for the filter wheel

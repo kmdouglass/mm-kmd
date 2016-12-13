@@ -10,9 +10,6 @@
 function initScriptEngineHelper()
 stepFactoryInit()
 
-% If all initialization routines succeed, set this flag to true.
-global g_engineInitialized;
-g_engineInitialized = true;
 end
 
 function stepFactoryInit()
