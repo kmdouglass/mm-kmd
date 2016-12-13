@@ -44,11 +44,12 @@ global g_nameMap;
 global g_gui;
 global g_mmc;
 global g_acq;
-global g_comBuffer;
+
+% Shared variables
+params = struct(); % Is reset for each new test
 
 %% Test 1: Set Camera Exposure Time
 % Set the camera exposure time to 50 ms and then to 10 ms
-clear params
 params.expTime = 50;
 step = utils.stepFactory('Camera', 'set exposure', params);
 step.cmd()
@@ -63,7 +64,6 @@ assert(g_mmc.getExposure() == 10);
 
 %% Test 2: Move Filter Wheel
 % Move the filter wheel through its filter positions
-clear params
 fpos647 = 0;
 fpos488 = 120;
 fpos750 = 240;
@@ -121,7 +121,6 @@ cmdTerminator = sprintf('\r');
 ansTerminator = sprintf('\rD >');
 
 % Turn laser on
-params = struct();
 step = utils.stepFactory('MPB Laser 642', 'turn on', params);
 step.cmd();
 pause(8);
@@ -158,14 +157,13 @@ pause(0.05);
 assert(str2num(answer) == 0);
 
 %% Test 6: Run a test STORM acquisition
-params = struct();
 params.folder     = ['H:\test_' num2str(randi([1e5, 999999]))];
 params.filename   = 'test_acq';
 params.numFrames  = 50;
 params.interval   = 20; % milliseconds
 
 % Make the directory if it doesn't exist
-[s, mess, messid] = mkdir(params.rootName);
+[s, mess, messid] = mkdir(params.folder);
 step = utils.stepFactory(...
     'Acquisition Engine','start STORM acquisition', params);
 step.cmd();
@@ -185,23 +183,22 @@ g_gui.closeAcquisitionWindow(acqName);
 
 % Assert that the folder exists and contains image data.
 % This assumes that MM has appended a '_1' to the dirName.
-fullDir      = fullfile(params.rootName, [params.dirName '_1']);
+fullDir      = fullfile(params.folder, [params.filename '_1']);
 folderExists = logical(exist(fullDir, 'dir'));
 assert(folderExists);
 
-imgData    = fullfile(fullDir, [params.dirName '_1_MMStack_Pos0.ome.tif']);
+imgData    = fullfile(fullDir,[params.filename '_1_MMStack_Pos0.ome.tif']);
 fileExists = logical(exist(imgData, 'file'));
 assert(fileExists);
 
 % 's' argument deletes folder and contents.
-[status, message, messageid] = rmdir(params.rootName,'s');
+[status, message, messageid] = rmdir(params.folder,'s');
 
 %% Test 7: Snap a test widefield image
 % NOTE: MM does not release handles to single images that have been
 % snapped. The test image therefore needs to be deleted after this session
 % of MM has been closed.
 
-clear params
 % The folder is given a random name because widefield images cannot be
 % deleted until MM is closed. By giving it a random name, we (most likely)
 % save the image data into a fresh folder so that MM won't automatically
@@ -231,7 +228,6 @@ assert(fileExists)
 % throws an error indicating that the matching method signature cannot be
 % found.
 
-clear params
 params = struct();
 step = utils.stepFactory('Shutter', 'open shutter', params);
 step.cmd();
@@ -244,7 +240,6 @@ button = questdlg('Is the shutter closed?');
 assert(strcmp(button, 'Yes'));
 
 %% Test 9: Lock and unlock the pgFocus
-clear params
 params.lock = true;
 step = utils.stepFactory('pgFocus', 'lock focus', params);
 step.cmd()
@@ -260,62 +255,3 @@ step.cmd()
 pause(1);
 currState = g_mmc.getProperty(g_nameMap('pgFocus'), 'Focus Mode');
 assert(strcmp(currState, 'Unlock Focus'));
-
-%% Test 10: Poll Folder
-% Polls a selected folder for a com file.
-clear params
-
-% Empty the buffer
-g_comBuffer = [];
-
-% Place a test com file in the folder before checking for it
-comFolder   = userpath;
-comFilename = 'testPC.mat';
-pcID        = 'testPC'; % Name to insert into the pcID field of g_comBuffer
-acqParams   = [];
-message     = [];
-
-filename = fullfile(comFolder, comFilename); % File to poll for
-save(filename, 'pcID', 'acqParams', 'message');
-
-% Setup and launch the polling step
-params.comFolder   = comFolder;
-params.comFilename = comFilename;
-params.timeout     = 10000; % milliseconds
-step = utils.stepFactory('Acquisition Engine', 'poll com folder', params);
-step.cmd();
-
-% Verify that the file was deleted.
-assert(exist(filename, 'file') == 0); % 0 -> does not exist
-
-%% Test 11: Test Poll Folder
-% This actually verifies the outcome of the Test 10 because the copy of
-% g_comBuffer available to the testsuite is not updated until after the
-% test completes, which would cause the assertion below to fail if grouped
-% with the Test 10 code.
-
-% Verify that the buffer contains the 'sending' PC's identifier
-assert(strcmp('testPC', g_comBuffer.pcID));
-
-% Empty the buffer
-g_comBuffer = [];
-
-%% Test 12: Poll Folder Timeout
-% The polling function times out if no file is found.
-clear params
-
-% Empty the buffer
-g_comBuffer = [];
-
-% Place a test com file in the folder before checking for it
-comFolder   = userpath;
-comFilename = 'testPC.mat';
-
-% Setup and launch the polling step
-params.comFolder   = comFolder;
-params.comFilename = comFilename;
-params.timeout     = 5000; % milliseconds
-step = utils.stepFactory('Acquisition Engine', 'poll com folder', params);
-step.cmd();
-
-assert(isempty(g_comBuffer)); % Buffer is empty due to timeout

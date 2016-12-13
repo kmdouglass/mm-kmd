@@ -12,8 +12,8 @@ acqParams.numFrames  = 2000;
 acqParams.interval   = 0; % time between frames; milliseconds
 
 % Widefield image parameters
-wfParams.folder   = acqParams.rootName;
-wfParams.filename = [acqParams.dirName '_WF'];
+wfParams.folder   = acqParams.folder;
+wfParams.filename = [acqParams.filename '_WF'];
 
 % Select which script will run
 script        = scripts.test(acqParams, wfParams);

@@ -74,13 +74,29 @@ switch p.Results.device
     %======================================================================
     % Acquisition Engine
     %
-    % The Acquisition Engine is an abstraction layer for software that
-    % controls data acquisition on the microscope. It includes, for
-    % example, launching Multi-D acquisitions in Micro-Manager and two-way
-    % communications between computers.
+    % The Acquisition Engine is an abstraction layer for any
+    % non-device-specific software that controls data acquisition on the
+    % microscope. It includes, for example, launching Multi-D acquisitions
+    % in Micro-Manager and two-way communications between computers, which
+    % do not directly control any hardware.
     %======================================================================
     case 'Acquisition Engine'
         switch cmd
+            case 'clear com buffer'
+                % Clears the com buffer of data
+                step.cmd = steps.acquisition_engine.clear_com_buffer(...
+                    p.Results.params);
+                
+            case 'poll com folder'
+                % Polls the com folder for a new file
+                step.cmd = steps.acquisition_engine.poll_com_folder(...
+                    p.Results.params);
+                
+            case 'send acq data'
+                % Sends acquisition data for another computer to read
+                step.cmd = steps.acquisition_engine.send_acq_data(...
+                    p.Results.params);
+                
             case 'start storm acquisition'
                 % Launch the acquisition
                 step.cmd = steps.acquisition_engine.start_storm_acquisition(...
@@ -93,10 +109,6 @@ switch p.Results.device
                 
             case 'wait for finish'
                 step.cmd = steps.acquisition_engine.wait_for_finish(...
-                    p.Results.params);
-                
-            case 'poll com folder'
-                step.cmd = steps.acquisition_engine.poll_com_folder(...
                     p.Results.params);
                     
             otherwise

@@ -7,7 +7,7 @@
 % Copyright (c) 2016 ECOLE POLYTECHNIQUE FEDERALE DE LAUSANNE, Switzerland
 % Laboratory of Experimental Biophysics (LEB)
 
-function initScriptEngineHelper()
+function initHelper()
 stepFactoryInit()
 
 end

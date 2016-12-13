@@ -14,12 +14,19 @@ function handle = poll_com_folder(params)
 %
 % Parameters
 % ----------
+% name        : string
+%   The name of the device in the global handles structure.
 % comFolder   : char array
 %   The folder containing communications files.
 % comFileName : char array
 %   The name of the file to poll for.
 % timeOut     : uint
 %   The amount of time in milliseconds to wait until a timeout occurs.
+%
+% Returns
+% -------
+% handle : function handle
+%   A pointer to a function that executes the desired hardware commands.
 
 global g_comBuffer
 
@@ -48,7 +55,7 @@ addRequired(p, 'comFilename'  , @ischar);
 addRequired(p, 'timeout', @isnumeric);
 parse(p, comFolder, comFilename, timeout);
 
-filename = fullfile(comFolder, comFilename);
+filename = fullfile(p.Results.comFolder, p.Results.comFilename);
 
 %% Device control functions
     function deviceControl()
