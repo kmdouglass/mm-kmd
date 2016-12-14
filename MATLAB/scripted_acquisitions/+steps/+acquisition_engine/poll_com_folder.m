@@ -74,7 +74,8 @@ filename = fullfile(p.Results.comFolder, p.Results.comFilename);
             % Check whether the com file exists; if yes, read contents of
             % .mat com file, delete it, and break out of loop.
             if (exist(filename, 'file') == 2) % 2 --> file exists
-                readFields  = {'pcID', 'acqParams', 'message'};
+                pause(1); % let file finish writing
+                readFields  = {'pcID', 'acqParams', 'message', 'expTime'};
                 g_comBuffer = load(filename, readFields{:});
                 delete(filename);
                 disp('Message received.');
