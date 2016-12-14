@@ -40,7 +40,27 @@ pause(10);
 step = sf('Shutter', 'open shutter', struct());
 step.cmd()
 
-% TODO: send info to other computer for snapping a widefield image
+% Prepare the widefield image on the other computer
+step = sf('Acquisition Engine', 'clear com buffer', struct());
+step.cmd();
+
+step = sf('Acquisition Engine', 'send acq data',             ... 
+          struct('comFolder', 'V:\com_folder',               ...
+                 'comFilename', [PCID '.mat'],               ...
+                 'pcID', PCID,                               ...
+                 'message', 'snap widefield image',          ...
+                 'acqParams', wfParams,                      ...
+                 'expTime', 10));
+step.cmd();
+
+% Poll the com folder for the response from the other computer
+step = sf('Acquisition Engine', 'poll com folder',           ...
+          struct('comFolder', 'V:\com_folder',               ...
+                 'comFilename', [SECONDARY_PCID '.mat'],     ...
+                 'timeout', 10000));   % timeout in milliseconds
+step.cmd();
+
+% Snap the widefield image when the response appears
 step = sf('Acquisition Engine', 'snap widefield image', wfParams);
 step.cmd();
 
@@ -52,7 +72,7 @@ step = sf('MPB Laser 642', 'set power', struct('power', 300));
 step.cmd()
 pause(1);
 
-% Prepare the acquisition on the other computer
+% Prepare the STORM acquisition on the other computer
 step = sf('Acquisition Engine', 'clear com buffer', struct());
 step.cmd();
 
@@ -64,7 +84,6 @@ step = sf('Acquisition Engine', 'send acq data',             ...
                  'acqParams', acqParams,                     ...
                  'expTime', 10));
 step.cmd();
-
 
 % Poll the com folder for the response from the other computer
 step = sf('Acquisition Engine', 'poll com folder',           ...
