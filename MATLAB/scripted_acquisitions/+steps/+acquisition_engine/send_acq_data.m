@@ -39,6 +39,7 @@ try
     pcID        = params.pcID;
     message     = params.message;
     acqParams   = params.acqParams;
+    expTime     = params.expTime;
 catch ME
     if strcmp(ME.identifier, 'MATLAB:nonExistentField')
         error(['The params struct for the sending acquisition data to '...
@@ -64,7 +65,7 @@ filename = fullfile(p.Results.comFolder, p.Results.comFilename);
 %% Device control functions
     function deviceControl()
         % Type the hardware and software instructions here
-        save(filename, 'pcID', 'message', 'acqParams');
+        save(filename, 'pcID', 'message', 'acqParams', 'expTime');
     end
 
 handle = @() deviceControl();
