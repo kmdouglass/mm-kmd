@@ -16,7 +16,8 @@ wfParams.folder   = acqParams.folder;
 wfParams.filename = [acqParams.filename '_WF'];
 
 % Select which script will run
-script        = scripts.test(acqParams, wfParams);
+%script = scripts.test(acqParams, wfParams);
+script        = scripts.test_two_computers_pc1(acqParams, wfParams, PCID, SECONDARY_PCID);
 engine        = scriptEngine();
 engine.script = script;
 

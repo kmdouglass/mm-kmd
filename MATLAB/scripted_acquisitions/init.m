@@ -15,7 +15,8 @@ SERIALNUM_FWHEEL  = 40866523; % Serial number of the filter wheel
 SERIALNUM_SHUTTER = 85855448; % Serial number of the shutter
 
 % Local Variables (change these depending on the machine)
-pcID = 'PC1';
+PCID           = 'PC1'; % This PC
+SECONDARY_PCID = 'PC2'; % The other PC to communicate with
 
 % Global Variables
 global g_h; g_h = struct(); % Device handles
