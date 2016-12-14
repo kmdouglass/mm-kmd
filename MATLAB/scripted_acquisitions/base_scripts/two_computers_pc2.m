@@ -5,33 +5,35 @@
 % Copyright (c) 2016 ECOLE POLYTECHNIQUE FEDERALE DE LAUSANNE, Switzerland
 % Laboratory of Experimental Biophysics (LEB)
 %
-% Prototyping pc2 scripting... this is not an important script
-%
+% Base script for automated acquisitions across two computers.
+% 
+% This base script is intended for the secondary acquisition computer. It
+% will continuously wait for a signal from the primary computer to begin
+% acquiring. When the signal is received, it sets up its acquisition and
+% replies to the primary computer that it is ready. It also tells the
+% primary computer when it is finished acquiring.
 
 global g_comBuffer;
 g_comBuffer = [];
 
 sf = @utils.stepFactory;
-
+%% Begin polling the com folder for the signal to start
 % Poll the com folder for the data from the other computer
 step = sf('Acquisition Engine', 'poll com folder',           ...
           struct('comFolder', 'E:\com_folder',               ...
                  'comFilename', [PRIMARY_PCID '.mat'],       ...
                  'timeout', 60000));   % timeout in milliseconds
 step.cmd();
-pause(step.pauseAfter/ 1000);
 
 % Set the exposure time of the camera
 step = sf('Camera', 'set exposure',                          ...
-          struct('expTime', g_comBuffer.expTime),            ...
-          'pauseAfter', 100);
+          struct('expTime', g_comBuffer.expTime));
 step.cmd();
-pause(step.pauseAfter / 1000);
+pause(0.1);
 
 % Start the acquisition and have camera wait on the trigger signal
 step = sf('Acquisition Engine', g_comBuffer.message, g_comBuffer.acqParams);
 step.cmd();
-pause(step.pauseAfter);
 
 % Send notice that the acquisition is ready
 step = sf('Acquisition Engine', 'send acq data',             ... 
@@ -42,12 +44,10 @@ step = sf('Acquisition Engine', 'send acq data',             ...
                  'expTime', [],                              ...
                  'acqParams', []));
 step.cmd();
-pause(step.pauseAfter/ 1000);
 
 % Wait for the acquisition to finish
 step = sf('Acquisition Engine', 'wait for finish', struct());
 step.cmd();
-pause(step.pauseAfter/ 1000);
 
 % Once finished report that the acquisition has finished
 % Send notice that the acquisition is ready
@@ -59,9 +59,7 @@ step = sf('Acquisition Engine', 'send acq data',             ...
                  'expTime', [],                              ...
                  'acqParams', []));
 step.cmd();
-pause(step.pauseAfter/ 1000);
              
 % Clear the com buffer
 step = sf('Acquisition Engine', 'clear com buffer', struct());
 step.cmd();
-pause(step.pauseAfter / 1000);

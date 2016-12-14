@@ -7,7 +7,7 @@
 % Copyright (c) 2016 ECOLE POLYTECHNIQUE FEDERALE DE LAUSANNE, Switzerland
 % Laboratory of Experimental Biophysics (LEB)
 
-function step = stepFactory(device, command, params, varargin)
+function step = stepFactory(device, command, params)
 % stepFactory creates a single step of a scripted acquisition.
 %
 % stepFactory is a factory class that returns a single step of a scripted
@@ -33,16 +33,6 @@ function step = stepFactory(device, command, params, varargin)
 %   laser power or a move distance. If no params are necessary for a given
 %   command, then pass an empty struct.
 %
-% Optional Name/Value Parameters
-% ------------------------------
-% pauseBefore   : numeric
-%   The amount of time in milliseconds to pause before executing the
-%   command.
-%   Default: 0
-% pauseAfter    : numeric
-%   The same as pauseBefore, but after executing the command.
-%   Default: 0
-%
 % Returns
 % -------
 % step : struct
@@ -63,9 +53,7 @@ p = inputParser;
 addRequired(p, 'device', @ischar);
 addRequired(p, 'command', @ischar);
 addRequired(p, 'params');
-addParameter(p, 'pauseBefore', 0);
-addParameter(p, 'pauseAfter', 0);
-parse(p, device, command, params, varargin{:});
+parse(p, device, command, params);
 
 %% Convert the command into one that is executable
 % Make input command case insensitive
@@ -192,11 +180,6 @@ switch p.Results.device
     otherwise
     deviceError(p.Results.device);
 end
-
-%% Add pauses before and after the command executes if they exist
-step.pauseBefore = p.Results.pauseBefore;
-step.pauseAfter  = p.Results.pauseAfter;
-
 end
 
 function deviceError(device)
