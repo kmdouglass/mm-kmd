@@ -13,11 +13,13 @@
 % replies to the primary computer that it is ready. It also tells the
 % primary computer when it is finished acquiring.
 
+global g_mmc;
 global g_comBuffer;
 g_comBuffer = [];
 
-rootDrive = 'E:\'; % The drive letter where data will be stored;
-                   % This replaces the drive sent from the primary PC.
+cameraName = 'Prime'; % Device name in Micro-Manager
+rootDrive  = 'E:\'; % The drive letter where data will be stored;
+                    % This replaces the drive sent from the primary PC.
 
 sf = @utils.stepFactory;
 %% Begin polling the com folder for the signal to start
@@ -47,6 +49,14 @@ pause(0.1);
 % Change the drive letter of the acquisition folder. Do this because the
 % drives are named differently on the two computers.
 g_comBuffer.acqParams.folder(1:length(rootDrive)) = rootDrive;
+
+% Set the camera trigger signal depending on the acquisition type. The
+% camera cannot snap widefield images if it's set to 'Trigger First' mode.
+if strcmp(g_comBuffer.message, 'snap widefield image')
+    g_mmc.setProperty(cameraName, 'TriggerMode', 'Internal Trigger');
+else
+    g_mmc.setProperty(cameraName, 'TriggerMode', 'Trigger first');
+end
 
 % Start the acquisition and have camera wait on the trigger signal
 step = sf('Acquisition Engine', g_comBuffer.message, g_comBuffer.acqParams);
