@@ -18,12 +18,22 @@ g_comBuffer = [];
 
 sf = @utils.stepFactory;
 %% Begin polling the com folder for the signal to start
+% Press CTRL-C to manually stop loop
+while true
+
 % Poll the com folder for the data from the other computer
 step = sf('Acquisition Engine', 'poll com folder',           ...
           struct('comFolder', 'E:\com_folder',               ...
                  'comFilename', [PRIMARY_PCID '.mat'],       ...
                  'timeout', 60000));   % timeout in milliseconds
-step.cmd();
+try
+    step.cmd();
+catch ME
+    if strcmp(ME.identifier, 'AquisitionEngine:PollingTimeout')
+        disp('Polling timed out. Looping back to beginning...');
+        continue;
+    end
+end
 
 % Set the exposure time of the camera
 step = sf('Camera', 'set exposure',                          ...
@@ -63,3 +73,5 @@ step.cmd();
 % Clear the com buffer
 step = sf('Acquisition Engine', 'clear com buffer', struct());
 step.cmd();
+
+end
