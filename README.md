@@ -4,6 +4,8 @@
 ## General Information
 These files contain various scripts and code that I have found useful while working with Micro-Manager. You may freely use them as you wish.
 
+Some documentation may be found at the [Wiki](https://github.com/kmdouglass/Micro-Manager/wiki).
+
 If you don't know what Micro-Manager is, check out their website: https://micro-manager.org/
 
 ## Instructions

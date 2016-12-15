@@ -27,11 +27,10 @@
 %
 %   tests = testsuite('utils.stepFactory_test');
 %
-% Wilcards may be used, but with care. For example, the command
+% Wilcards may be used, but with care. For example,
 %
-%   result = runtests('utils.stepFactory_test', 'Name', '*Test1*');
+%   result = runtests('utils.stepFactory_test', 'Name', '*Test1_*');
 %
-% will run tests 1, 10, 100, etc.
 %
 % This test is specific to the Micro-Manager configuration file
 % ht-main_Prime.cfg. Any changes to the hardware will likely require
@@ -156,7 +155,48 @@ answer = g_mmc.getSerialPortAnswer(port, ansTerminator);
 pause(0.05);
 assert(str2num(answer) == 0);
 
-%% Test 6: Run a test STORM acquisition
+%% Test 6: Turn on 750 laser, set the power, then turn it off
+port = 'COM12';
+cmdTerminator = sprintf('\r');
+ansTerminator = sprintf('\rD >');
+
+% Turn laser on
+step = utils.stepFactory('MPB Laser 750', 'turn on', params);
+step.cmd();
+pause(8);
+g_mmc.setSerialPortCommand(port, 'GETLDENABLE', cmdTerminator);
+answer = g_mmc.getSerialPortAnswer(port, ansTerminator);
+pause(0.05);
+assert(str2num(answer) == 1);
+
+% Set power to 100 mW
+params.power = 100;
+step = utils.stepFactory('MPB Laser 750', 'set power', params);
+step.cmd();
+pause(1);
+g_mmc.setSerialPortCommand(port, 'GETPOWER 0', cmdTerminator);
+answer = g_mmc.getSerialPortAnswer(port, ansTerminator);
+assert(str2num(answer) == 100);
+
+% Set power to 50 mW
+params.power = 50;
+step = utils.stepFactory('MPB Laser 750', 'set power', params);
+step.cmd();
+pause(2);
+g_mmc.setSerialPortCommand(port, 'GETPOWER 0', cmdTerminator);
+answer = g_mmc.getSerialPortAnswer(port, ansTerminator);
+assert(str2num(answer) == 50);
+
+% Turn laser off
+step = utils.stepFactory('MPB Laser 750', 'turn off', []);
+step.cmd();
+pause(8);
+g_mmc.setSerialPortCommand(port, 'GETLDENABLE', cmdTerminator);
+answer = g_mmc.getSerialPortAnswer(port, ansTerminator);
+pause(0.05);
+assert(str2num(answer) == 0);
+
+%% Test 7: Run a test STORM acquisition
 params.folder     = ['H:\test_' num2str(randi([1e5, 999999]))];
 params.filename   = 'test_acq';
 params.numFrames  = 50;
@@ -194,7 +234,7 @@ assert(fileExists);
 % 's' argument deletes folder and contents.
 [status, message, messageid] = rmdir(params.folder,'s');
 
-%% Test 7: Snap a test widefield image
+%% Test 8: Snap a test widefield image
 % NOTE: MM does not release handles to single images that have been
 % snapped. The test image therefore needs to be deleted after this session
 % of MM has been closed.
@@ -221,7 +261,7 @@ imgData = fullfile(params.folder, [params.filename '' ], ...
 fileExists = logical(exist(imgData, 'file'));
 assert(fileExists)
 
-%% Test 8: Open and close the shutter
+%% Test 9: Open and close the shutter
 % I don't ask the device itself for confirmation that the shutter is open
 % because the APT ActiveX method SC_GetOPState() requires a pointer as the
 % second argument. MATLAB however thinks it requires an integer and thus
@@ -239,7 +279,7 @@ step.cmd();
 button = questdlg('Is the shutter closed?');
 assert(strcmp(button, 'Yes'));
 
-%% Test 9: Lock and unlock the pgFocus
+%% Test 10: Lock and unlock the pgFocus
 params.lock = true;
 step = utils.stepFactory('pgFocus', 'lock focus', params);
 step.cmd()

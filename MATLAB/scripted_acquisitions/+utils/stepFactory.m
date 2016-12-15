@@ -103,9 +103,9 @@ switch p.Results.device
                 commandError(p.Results.device, p.Results.command);
         end
     
-    %=======
+    %======================================================================
     % Camera
-    %=======
+    %======================================================================
     case 'Camera'
         switch cmd
             case 'set exposure'
@@ -114,9 +114,9 @@ switch p.Results.device
                 commandError(p.Results.device, p.Results.command);
         end
         
-    %======================
+    %======================================================================
     % Filter Wheel Commands
-    %======================
+    %======================================================================
     case 'Filter Wheel'
         switch cmd
             case 'move filter'
@@ -127,9 +127,9 @@ switch p.Results.device
                 commandError(p.Results.device, p.Results.command);
         end
         
-    %==============
+    %======================================================================
     % MPB Laser 642
-    %==============
+    %======================================================================
     case 'MPB Laser 642'
         switch cmd
             case 'turn on'
@@ -142,9 +142,24 @@ switch p.Results.device
                 commandError(p.Results.device, p.Results.command);
         end
         
-    %===================    
+    %======================================================================
+    % MPB Laser 750
+    %======================================================================
+    case 'MPB Laser 750'
+        switch cmd
+            case 'turn on'
+                step.cmd = steps.mpb_laser_750.turn_on(params);
+            case 'turn off'
+                step.cmd = steps.mpb_laser_750.turn_off(params);
+            case 'set power'
+                step.cmd = steps.mpb_laser_750.set_power(params);
+            otherwise
+                commandError(p.Results.device, p.Results.command);
+        end
+        
+    %======================================================================    
     % ND Filter Commands
-    %===================
+    %======================================================================
     case 'ND Filter'
         switch cmd
             case 'move'
@@ -153,9 +168,9 @@ switch p.Results.device
                 commandError(p.Results.device, p.Results.command);
         end
 
-    %========
+    %======================================================================
     % pgFocus
-    %========
+    %======================================================================
     case 'pgFocus'
         switch cmd
             case 'lock focus'
@@ -164,9 +179,9 @@ switch p.Results.device
                 commandError(p.Results.device, p.Results.command);
         end
         
-    %========
+    %======================================================================
     % Shutter
-    %========
+    %======================================================================
     case 'Shutter'
         switch cmd
             case 'open shutter'

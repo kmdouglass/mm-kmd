@@ -26,14 +26,16 @@ customNames = {'Filter Wheel',       ... 1
                'Camera',             ... 4
                'MPB Laser 642'       ... 5
                'Acquisition Engine', ... 6
-               'pgFocus'};
-hwNames     = {'fwheel',             ... 1
-               'shutter',            ... 2
-               'Arduino-Switch',     ... 3
-               'Prime',              ... 4
-               'COM10',              ... 5
-               'acq',                ... 6
-               'pgFocus-Stabilization'};
+               'pgFocus',            ... 7
+               'MPB Laser 750'};
+hwNames     = {'fwheel',                ... 1
+               'shutter',               ... 2
+               'Arduino-Switch',        ... 3
+               'Prime',                 ... 4
+               'COM10',                 ... 5
+               'acq',                   ... 6
+               'pgFocus-Stabilization', ... 7
+               'COM12'};
 g_nameMap   = containers.Map(customNames, hwNames);
 
 end
