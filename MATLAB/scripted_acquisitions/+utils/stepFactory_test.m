@@ -196,7 +196,39 @@ answer = g_mmc.getSerialPortAnswer(port, ansTerminator);
 pause(0.05);
 assert(str2num(answer) == 0);
 
-%% Test 7: Run a test STORM acquisition
+%% Test 7: Turn on 488 laser, set the power, then turn it off
+MMLaserName = 'Laser: Sapphire 488nm';
+% Turn laser on
+step = utils.stepFactory('Sapphire Laser 488', 'turn on', params);
+step.cmd();
+% I can't check the laser state because MM always reports it as 0,
+% regardless of whether the laser is on or off.
+button = questdlg('Is the 488 laser on?');
+assert(strcmp(button, 'Yes'));
+
+% Set power to 25 mW
+params.power = 25;
+step = utils.stepFactory('Sapphire Laser 488', 'set power', params);
+step.cmd();
+pause(1);
+currPower = g_mmc.getProperty(MMLaserName, 'PowerSetpoint');
+assert(str2num(currPower) == params.power);
+
+% Set power to 50 mW
+params.power = 50;
+step = utils.stepFactory('Sapphire Laser 488', 'set power', params);
+step.cmd();
+pause(1);
+currPower = g_mmc.getProperty(MMLaserName, 'PowerSetpoint');
+assert(str2num(currPower) == params.power);
+
+% Turn laser off
+step = utils.stepFactory('Sapphire Laser 488', 'turn off', params);
+step.cmd();
+button = questdlg('Is the 488 laser off?');
+assert(strcmp(button, 'Yes'));
+
+%% Test 8: Run a test STORM acquisition
 params.folder     = ['H:\test_' num2str(randi([1e5, 999999]))];
 params.filename   = 'test_acq';
 params.numFrames  = 50;
@@ -234,7 +266,7 @@ assert(fileExists);
 % 's' argument deletes folder and contents.
 [status, message, messageid] = rmdir(params.folder,'s');
 
-%% Test 8: Snap a test widefield image
+%% Test 9: Snap a test widefield image
 % NOTE: MM does not release handles to single images that have been
 % snapped. The test image therefore needs to be deleted after this session
 % of MM has been closed.
@@ -261,7 +293,7 @@ imgData = fullfile(params.folder, [params.filename '' ], ...
 fileExists = logical(exist(imgData, 'file'));
 assert(fileExists)
 
-%% Test 9: Open and close the shutter
+%% Test 10: Open and close the shutter
 % I don't ask the device itself for confirmation that the shutter is open
 % because the APT ActiveX method SC_GetOPState() requires a pointer as the
 % second argument. MATLAB however thinks it requires an integer and thus
@@ -279,7 +311,7 @@ step.cmd();
 button = questdlg('Is the shutter closed?');
 assert(strcmp(button, 'Yes'));
 
-%% Test 10: Lock and unlock the pgFocus
+%% Test 11: Lock and unlock the pgFocus
 params.lock = true;
 step = utils.stepFactory('pgFocus', 'lock focus', params);
 step.cmd()

@@ -27,7 +27,8 @@ customNames = {'Filter Wheel',       ... 1
                'MPB Laser 642'       ... 5
                'Acquisition Engine', ... 6
                'pgFocus',            ... 7
-               'MPB Laser 750'};
+               'MPB Laser 750',      ... 8
+               'Sapphire Laser 488'};
 hwNames     = {'fwheel',                ... 1
                'shutter',               ... 2
                'Arduino-Switch',        ... 3
@@ -35,7 +36,8 @@ hwNames     = {'fwheel',                ... 1
                'COM10',                 ... 5
                'acq',                   ... 6
                'pgFocus-Stabilization', ... 7
-               'COM12'};
+               'COM12',                 ... 8
+               'Laser: Sapphire 488nm'};
 g_nameMap   = containers.Map(customNames, hwNames);
 
 end

@@ -180,6 +180,21 @@ switch p.Results.device
         end
         
     %======================================================================
+    % Sapphire Laser 488
+    %======================================================================
+    case 'Sapphire Laser 488'
+        switch cmd
+            case 'turn on'
+                step.cmd = steps.sapphire_laser_488.turn_on(params);
+            case 'turn off'
+                step.cmd = steps.sapphire_laser_488.turn_off(params);
+            case 'set power'
+                step.cmd = steps.sapphire_laser_488.set_power(params);
+            otherwise
+                commandError(p.Results.device, p.Results.command);
+        end
+        
+    %======================================================================
     % Shutter
     %======================================================================
     case 'Shutter'
