@@ -24,6 +24,17 @@ gui.snapAndAddImage(acqName, 0, 0, 0, 0);
 gui.closeAcquisition(acqName);
 ```
 
+### [Questions about circular buffer](https://sourceforge.net/p/micro-manager/mailman/message/33735094/)
+
++ **Original Poster** : Thurston Herricks
++ **Date** : 2015-04-06
+
+**Be sure to read C. Weisiger's corrected post.**
+
+getLastImage() always returns the oldest collected image from the
+buffer that has not yet been removed. This however is inconsistent
+with my tests and with other reports of what `getLastImage()` does.
+
 ## High Speed Acquisitions
 
 ### [startSequenceAcquisition Circular Buffer MATLAB](https://sourceforge.net/p/micro-manager/mailman/micro-manager-general/thread/1425063070748-7584815.post@n2.nabble.com/)
@@ -43,3 +54,5 @@ process the images as they arrived in the cache.
 
 A pretty good and lengthy discussion about the possibility of MM supporting
 larger container formats in the future.
+
+
