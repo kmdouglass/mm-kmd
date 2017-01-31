@@ -8,7 +8,7 @@
 % Laboratory of Experimental Biophysics (LEB)
 
 % Constants
-MM_DIR            = 'C:\Program Files\Micro-Manager-1.4.23_20160426';
+MM_DIR            = 'C:\Program Files\Micro-Manager-2.0beta';
 PROGID_FWHEEL     = 'MGMOTOR.MGMotorCtrl.1';
 PROGID_SHUTTER    = 'MGMOTOR.MGMotorCtrl.1';
 SERIALNUM_FWHEEL  = 40866523; % Serial number of the filter wheel
@@ -20,7 +20,7 @@ SECONDARY_PCID = 'PC2'; % The other PC to communicate with
 
 % Global Variables
 global g_h; g_h = struct(); % Device handles
-global g_f; g_f = struct(); % Figure handles
+%global g_f; g_f = struct(); % Figure handles
 global g_nameMap;
 global g_gui;
 global g_mmc;
@@ -42,7 +42,7 @@ fpos(4) = 450; % Height
 % Load ActiveX control for the filter wheel
 % 'initFunc', 'MoveHome(0,0)' homes the filter wheel during initialization.
 fWheelName = g_nameMap('Filter Wheel');
-[g_h.(fWheelName), g_f.(fWheelName)] = utils.initAptDevice(...
+[g_h.(fWheelName), ~] = utils.initAptDevice(...
     PROGID_FWHEEL, SERIALNUM_FWHEEL,         ...
     'figName','Filter Wheel', 'initFunc', 'MoveHome(0,0)');
 
@@ -52,7 +52,7 @@ fpos(2) = fpos(2) - fpos(4);
 % Load ActiveX control for the shutter
 % 'SC_SetOperatingMode' sets the shutter mode to manual.
 shutterName = g_nameMap('Shutter');
-[g_h.(shutterName), g_f.(shutterName)] = utils.initAptDevice(...
+[g_h.(shutterName), ~] = utils.initAptDevice(...
     PROGID_SHUTTER, SERIALNUM_SHUTTER,         ...
     'figName', 'Shutter', 'fpos', fpos,        ...
     'initFunc', 'SC_SetOperatingMode(0,1)');

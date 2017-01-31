@@ -98,24 +98,24 @@ step = utils.stepFactory('ND Filter', 'move', params);
 step.cmd();
 pause(2);
 currState = g_mmc.getProperty(g_nameMap('ND Filter'), 'Label');
-assert(strcmp(currState, 'ND Filter Up'));
+assert(strcmp(currState, 'Up'));
 
 params.pos = 'down';
 step = utils.stepFactory('ND Filter', 'move', params);
 step.cmd();
 pause(2);
 currState = g_mmc.getProperty(g_nameMap('ND Filter'), 'Label');
-assert(strcmp(currState, 'ND Filter Down'));
+assert(strcmp(currState, 'Down'));
 
 params.pos = 'up';
 step = utils.stepFactory('ND Filter', 'move', params);
 step.cmd();
 pause(2);
 currState = g_mmc.getProperty(g_nameMap('ND Filter'), 'Label');
-assert(strcmp(currState, 'ND Filter Up'));
+assert(strcmp(currState, 'Up'));
 
 %% Test 5: Turn on 642 laser, set the power, then turn it off
-port = 'COM10';
+port = 'COM5';
 cmdTerminator = sprintf('\r');
 ansTerminator = sprintf('\rD >');
 
@@ -156,7 +156,7 @@ pause(0.05);
 assert(str2num(answer) == 0);
 
 %% Test 6: Turn on 750 laser, set the power, then turn it off
-port = 'COM12';
+port = 'COM6';
 cmdTerminator = sprintf('\r');
 ansTerminator = sprintf('\rD >');
 
@@ -197,7 +197,7 @@ pause(0.05);
 assert(str2num(answer) == 0);
 
 %% Test 7: Turn on 488 laser, set the power, then turn it off
-MMLaserName = 'Laser: Sapphire 488nm';
+MMLaserName = 'Laser 488nm';
 % Turn laser on
 step = utils.stepFactory('Sapphire Laser 488', 'turn on', params);
 step.cmd();
@@ -229,7 +229,7 @@ button = questdlg('Is the 488 laser off?');
 assert(strcmp(button, 'Yes'));
 
 %% Test 8: Run a test STORM acquisition
-params.folder     = ['H:\test_' num2str(randi([1e5, 999999]))];
+params.folder     = ['L:\test_' num2str(randi([1e5, 999999]))];
 params.filename   = 'test_acq';
 params.numFrames  = 50;
 params.interval   = 20; % milliseconds

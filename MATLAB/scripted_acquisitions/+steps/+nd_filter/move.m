@@ -42,9 +42,9 @@ catch ME
 end
 
 if strcmp(pos, 'up')
-    pos = 'ND Filter Up';   % Depends on MM hardware configuration.
+    pos = 'Up';   % Depends on MM hardware configuration.
 elseif strcmp(pos, 'down')
-    pos = 'ND Filter Down'; % Depends on MM hardware configuration.
+    pos = 'Down'; % Depends on MM hardware configuration.
 else
     error('Variable pos should be either ''up'' or ''down''');
 end
