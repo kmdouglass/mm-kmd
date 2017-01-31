@@ -55,13 +55,19 @@ addRequired(p, 'interval' , @isnumeric);
 parse(p, folder, filename, numFrames, interval);
 
 %% Device control functions
-    function deviceControl()
+    function ds = deviceControl()
         % Type the hardware and software instructions here
+        %
+        % Returns
+        % -------
+        % ds : Datastore
+        %
         disp('Starting acquisition...');
         g_acq.setRootName(p.Results.folder);
         g_acq.setDirName(p.Results.filename);
+        g_acq.setSaveFiles(true);
         g_acq.setFrames(p.Results.numFrames, p.Results.interval);
-        g_acq.acquire();
+        ds = g_acq.acquire();
     end
 
 handle = @() deviceControl();

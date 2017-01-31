@@ -238,9 +238,8 @@ params.interval   = 20; % milliseconds
 [s, mess, messid] = mkdir(params.folder);
 step = utils.stepFactory(...
     'Acquisition Engine','start STORM acquisition', params);
-step.cmd();
+ds = step.cmd();
 
-acqName = char(g_gui.getAcquisitionNames());
 disp('Test acquisition is running.');
 
 % Wait for the acquisition to finish
@@ -251,7 +250,7 @@ while g_acq.isAcquisitionRunning()
 end
 disp('Test acquisition has finished.');
 pause(2);
-g_gui.closeAcquisitionWindow(acqName);
+ds.close();
 
 % Assert that the folder exists and contains image data.
 % This assumes that MM has appended a '_1' to the dirName.
