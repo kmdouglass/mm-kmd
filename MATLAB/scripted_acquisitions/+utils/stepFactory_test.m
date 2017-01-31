@@ -274,8 +274,9 @@ assert(fileExists);
 % deleted until MM is closed. By giving it a random name, we (most likely)
 % save the image data into a fresh folder so that MM won't automatically
 % append a number to the filename's prefix.
-params.folder   = ['C:\Users\laboleb\Desktop\Temp\delete_me_' ...
-                   num2str(randi([1e5, 999999]))];
+%params.folder   = ['C:\Users\laboleb\Desktop\Temp\delete_me_' ...
+%                   num2str(randi([1e5, 999999]))];
+params.folder   = 'C:\Users\laboleb\Desktop\Temp\delete_me';
 params.filename = 'WF_test';
 
 step = utils.stepFactory(...

@@ -12,7 +12,7 @@
 %
 %% Setup the acquisition parameters
 % STORM acquisition parameters
-acqParams.folder     = 'H:\test';
+acqParams.folder     = 'L:\test';
 acqParams.filename   = 'test_acq';
 acqParams.numFrames  = 2000;
 acqParams.interval   = 0; % time between frames; milliseconds

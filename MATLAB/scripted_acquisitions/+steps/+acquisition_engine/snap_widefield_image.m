@@ -50,11 +50,18 @@ end
 
 %% Device control functions
     function deviceControl()%% Device control functions
-        acqName=char(g_gui.getUniqueAcquisitionName(filename));
-        % false, true -> show acquisition is false, save to disk is true
-        g_gui.openAcquisition(acqName, folder, 1,1,1,1, false, true);
-        g_gui.snapAndAddImage(acqName,0,0,0,0);
-        g_gui.closeAcquisition(acqName);
+        fullPath = fullfile(folder, filename);
+        uniqueName = g_gui.data().getUniqueSaveDirectory(fullPath);
+        ds = g_gui.data().createMultipageTIFFDatastore(...
+            uniqueName, true, true);
+        
+        g_mmc.snapImage();
+        tmp = g_mmc.getTaggedImage();
+        image = g_gui.data().convertTaggedImage(tmp);
+        ds.putImage(image);
+        ds.freeze();
+        ds.close();
+        
     end
 
 handle = @() deviceControl();
