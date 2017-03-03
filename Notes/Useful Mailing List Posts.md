@@ -1,5 +1,21 @@
 # Useful Posts to the Micro-Manager Mailing List
 
+## Image Processing
+
+### [About the two data rate of micro-manager](https://sourceforge.net/p/micro-manager/mailman/message/35695058/)
+
++ **Original Poster** : Luchang Li
++ **Date** : 2017-03-01
+
+OP is developing a plugin to perform real-time GPU processing as
+images arrive from the camera and had questions about two different
+data rates available in the code. One was for real-time display, which
+drops images, and one retains all the images for actual measurements.
+
+Nico explained that burstAcquisitions may be best for this type of
+application but also discussed On-the-Fly processing.
+
+
 ## Scripting
 
 ### [Program to capture an image from microscope using java (netbeans)](https://sourceforge.net/p/micro-manager/mailman/micro-manager-general/thread/12C646D192C30E43ADDFA7C6B4FD8A35EEE844E3%40ECS-EX10-MB2.ad.engr.uconn.edu/#msg34384917)
