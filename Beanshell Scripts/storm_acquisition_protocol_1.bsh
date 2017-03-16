@@ -1,41 +1,139 @@
 /*
 Acquistion protocol for a single channel widefield + STORM acqusition.
 
-The standard acquisition is used to snap a single widefield image of a 
+The standard acquisition is used to snap a single widefield image of a
 field of view (FOV), followed by a STORM acquisition of the same FOV
 in the same channel as that of the widefield image.
 
-AUTHOR: Kyle M. Douglass, http://kmdouglass.github.io
-
-COPYRIGHT:     ECOLE POLYTECHNIQUE FEDERALE DE LAUSANNE, Switzerland
-               Laboratory of Experimental Biophysics (LEB), 2016
+AUTHOR:    Kyle M. Douglass, http://kmdouglass.github.io
+LICENSE:   MIT
+COPYRIGHT: ECOLE POLYTECHNIQUE FEDERALE DE LAUSANNE, Switzerland
+           Laboratory of Experimental Biophysics (LEB), 2017
 */
 
 /* Parameters to set before acquisition */
-int storm_int     = 10;  // camera integration time for STORM, ms
-int wf_int        = 10;  // camera integration time for widefield images, ms
+String folder     = "H:\test";       // folder to store the data
+String filename   = "test_acq_A647"; // name of the datasets
 
-float storm_power = 800; // laser power set point for STORM, mW
-float wf_power    = 200; // power set point for widefield imaging, mW
+int storm_exp     = 10;    // camera exposure time for STORM, ms
+int num_frames    = 20000; // number of frames in an acquisition
+int interval      = 0;     // time between frames, ms
+float storm_power = 800;   // laser power set point for STORM, mW
 
-int wait_time_laser   = 5000; // time to wait for the laser to adjust its power
-int wait_time_shutter = 500; // time to wait for shutter vibrations to dissipate
+int wf_exp        = 50;    // camera exposure time for widefield
+                           // images, ms
+float wf_power    = 200;   // power set point for widefield imaging,
+                           // mW
 
-//public static final String WF_NAME = "HeLa_Control"; // name of widefield images
+/* Primary acquisition script 
+
+	DO NOT EDIT BELOW THIS LINE
+----------------------------------------------------------------------
+*/
+
+acq = mm.getAcquisitionEngine();
+
+/* Datastore setup */
+unique_name = mm.data().getUniqueSaveDirectory(folder + filename);
+ds = mm.data().createMultipageTIFFDatastore(unique_name, true, true);
 
 /* Device parameters */
-boolean filter_up  = true;
-boolean focus_lock = false;
-boolean shutter_up = true;
-
-/* Primary acquisition script */
+static final String MPB_LASER_642 = "COM5";
+static final String MPB_LASER_750 = "COM6";
+static final String MPB_CMD_TERM = "\r";    // terminates commands
+static final String MPB_ANS_TERM = "\rD >"; // terminates answers
 
 // Lock autofocus
-if ("Unlock Focus".equals(mmc.getProperty("pgFocus-Stabilization", "Focus Mode"))) {
-	mmc.setProperty("pgFocus-Stabilization", "Focus Mode", "Lock Focus");
-}
+mmc.setProperty("pgFocus-Stabilization", "Focus Mode", "Lock Focus");
+mmc.sleep(20);
 
 // Set the ND filter to "up" for widefield imaging
-if (mmc.getProperty("Arduino-Switch", "State") != 0) {
-	mmc.setProperty("Arduino-Switch", "State", 0);
+mmc.setProperty("ND Filter", "Label", "Up");
+mmc.sleep(1000);
+
+// Set the camera exposure time for widefield image
+mm.setExposure(wf_exp);
+mmc.sleep(20);
+
+// Turn on MPB laser
+mmc.setSerialPortCommand(
+    MPB_LASER_642, 'SETLDENABLE 1', MPB_CMD_TERM);
+mmc.getSerialPortAnswer(MPB_LASER_642, MPB_ANS_TERM);
+mmc.sleep(10000);
+
+// Set the MPB laser power
+mmc.setSerialPortCommand(
+    MPB_LASER_642,
+    "SETPOWER 0 " + String.valueOf(wf_power),
+    MPB_CMD_TERM
+);
+mmc.getSerialPortAnswer(name, sprintf(ansTerminator));
+
+// Open shutter
+// TODO
+
+// Snap widefield image
+mmc.snapImage();
+tmp = mmc.getTaggedImage();
+image = mm.data().convertTaggedImage(tmp);
+oldSummary = ds.getSummaryMetadata();
+newSummary = oldSummary.copy().prefix(filename).build();
+ds.setSummaryMetadata(newSummary);
+ds.putImage(image);
+ds.freeze(); // TODO: Are freeze() and close both needed?
+ds.close();
+
+// Lower ND filter
+mmc.setProperty("ND Filter", "Label", "Down");
+mmc.sleep(500);
+
+// Set the MPB laser power
+mmc.setSerialPortCommand(
+    MPB_LASER_642,
+    "SETPOWER 0 " + String.valueOf(storm_power),
+    MPB_CMD_TERM
+);
+mmc.getSerialPortAnswer(MPB_LASER_642, MPB_ANS_TERM);
+mmc.sleep(1000);
+
+// Start the STORM acquisition
+disp("Starting acquisition...");
+acq.setRootName(folder);
+acq.setDirName(filename);
+acq.setSaveFiles(true);
+acq.setFrames(numFrames, interval);
+ds = acq.acquire();
+
+// Wait on the STORM acquisition to finish
+print("Acquisition is running.");
+while acq.isAcquisitionRunning() {
+    mmc.sleep(1000);
 }
+print("STORM acquisition has finished. Cleaning up...");
+
+// Close Shutter
+// TODO
+
+// Set the MPB laser power
+mmc.setSerialPortCommand(
+    MPB_LASER_642,
+    "SETPOWER 0 " + String.valueOf(wf_power),
+    MPB_CMD_TERM
+);
+mmc.getSerialPortAnswer(MPB_LASER_642, MPB_ANS_TERM);
+mmc.sleep(1000);
+
+// Turn off the MPB laser
+mmc.setSerialPortCommand(
+    MPB_LASER_642, "SETLDENABLE 0", MPB_CMD_TERM);
+mmc.getSerialPortAnswer(MPB_LASER_642, MPB_ANS_TERM);
+mmc.sleep(500);
+
+// Raise the ND filter
+mmc.setProperty("ND Filter", "Label", "Up");
+mmc.sleep(500);
+
+// Unlock pgFocus
+mmc.setProperty(
+    "pgFocus-Stabilization", "Focus Mode", "Unlock Focus");
+
