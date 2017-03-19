@@ -16,7 +16,7 @@ String folder     = "L:\\test\\";       // folder to store the data
 String filename   = "test_acq_A647"; // name of the datasets
 
 int storm_exp     = 10;    // camera exposure time for STORM, ms
-int num_frames    = 1000; // number of frames in an acquisition
+int num_frames    = 5000; // number of frames in an acquisition
 int interval      = 0;     // time between frames, ms
 float storm_power = 800;   // laser power set point for STORM, mW
 
@@ -32,11 +32,16 @@ float wf_power    = 200;   // power set point for widefield imaging,
 	DO NOT EDIT BELOW THIS LINE
 ----------------------------------------------------------------------
 */
-
+acq_id++; // Increments the acquisition ID counter
 acq = mm.getAcquisitionEngine();
 
+/* STORM acquisition setup */
+String storm_filename = filename + "_ST" + String.valueOf(acq_id);
+String comment = "WF exposture time: " + String.valueOf(wf_exp) + ", WF power: " + String.valueOf(wf_power) + " mW, STORM exposure time: " + String.valueOf(storm_exp) + ", STORM power: " + String.valueOf(storm_power) + " mW";
+
 /* Widefield datastore setup */
-unique_name = mm.data().getUniqueSaveDirectory(folder + filename + "_WF");
+String wf_filename = filename + "_WF" + String.valueOf(acq_id);
+unique_name = mm.data().getUniqueSaveDirectory(folder + wf_filename);
 ds = mm.data().createMultipageTIFFDatastore(unique_name, true, true);
 
 /* Device parameters */
@@ -70,6 +75,7 @@ mmc.setSerialPortCommand(
     MPB_CMD_TERM
 );
 mmc.getSerialPortAnswer(MPB_LASER_642, MPB_ANS_TERM);
+mmc.sleep(1000);
 
 // Open shutter
 mmc.setProperty("TriggerScope-TTL02", "Label", "Open");
@@ -80,11 +86,12 @@ mmc.snapImage();
 tmp = mmc.getTaggedImage();
 image = mm.data().convertTaggedImage(tmp);
 oldSummary = ds.getSummaryMetadata();
-newSummary = oldSummary.copy().prefix(filename + "_WF").build();
+newSummary = oldSummary.copy().prefix(wf_filename).build();
 ds.setSummaryMetadata(newSummary);
 ds.putImage(image);
 ds.freeze(); // TODO: Are freeze() and close both needed?
 ds.close();
+print("Widefield image acquired.");
 
 // Set the camera exposure time for widefield image
 mm.setExposure(storm_exp);
@@ -106,9 +113,10 @@ mmc.sleep(1000);
 // Start the STORM acquisition
 print("Starting acquisition...");
 acq.setRootName(folder);
-acq.setDirName(filename);
+acq.setDirName(storm_filename);
 acq.setSaveFiles(true);
 acq.setFrames(num_frames, interval);
+acq.setComment(comment);
 ds = acq.acquire();
 
 // Wait on the STORM acquisition to finish
@@ -131,15 +139,13 @@ mmc.setSerialPortCommand(
 mmc.getSerialPortAnswer(MPB_LASER_642, MPB_ANS_TERM);
 mmc.sleep(1000);
 
-// Turn off the MPB laser
-mmc.setSerialPortCommand(
-    MPB_LASER_642, "SETLDENABLE 0", MPB_CMD_TERM);
-mmc.getSerialPortAnswer(MPB_LASER_642, MPB_ANS_TERM);
-mmc.sleep(500);
-
 // Raise the ND filter
 mmc.setProperty("ND Filter", "Label", "Up");
 mmc.sleep(500);
+
+// Set the camera exposure time for widefield image
+mm.setExposure(wf_exp);
+mmc.sleep(20);
 
 // Unlock pgFocus
 mmc.setProperty(
