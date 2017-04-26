@@ -1,0 +1,55 @@
+/*
+Acquistion protocol for acquiring 3D astigmatic calibration curves.
+
+AUTHOR:    Kyle M. Douglass, http://kmdouglass.github.io
+LICENSE:   MIT
+COPYRIGHT: ECOLE POLYTECHNIQUE FEDERALE DE LAUSANNE, Switzerland
+           Laboratory of Experimental Biophysics (LEB), 2017
+*/
+
+import org.micromanager.data.Datastore;
+import org.micromanager.data.Image;
+
+/* Parameters to set before acquisition */
+float zStart   = -0.75;  // microns, relative to current focal plane
+float zStop    = 0.75;   // microns, relative to current focal plane
+float zStep    = 0.01;  // microns
+float interval = 100;   // milliseconds
+
+float number_slices = (zStop - zStart) / zStep;
+
+String savePath = "L:\\Z-Stacks\\astigmatism_pos1";
+
+savePath = mm.data().getUniqueSaveDirectory(savePath);
+
+// Setup the datastore and image display window
+store = mm.data().createRAMDatastore();
+mm.displays().createDisplay(store);
+
+builder = mm.data().getCoordsBuilder();
+int curr_slice = 0;
+
+// move stage to starting z-position
+mmc.setRelativePosition(zStart);
+
+// Take an image, then move to the next z-position
+while (curr_slice < number_slices) {
+	image = mm.live().snap(false).get(0);
+	
+	// Update z-coordinate of the image
+	image = image.copyAtCoords(builder.z(curr_slice).time(0).build());
+	store.putImage(image);
+
+	// Move to the next z-position
+	mmc.setRelativePosition(zStep);
+
+	// Update slice and sleep until next iteration
+	curr_slice++;
+	mmc.sleep(interval);
+}
+
+// Return to the original stage position
+mmc.setRelativePosition(-zStop);
+
+// Save the datastore
+store.save(Datastore.SaveMode.MULTIPAGE_TIFF, savePath);

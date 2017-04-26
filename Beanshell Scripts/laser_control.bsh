@@ -4,6 +4,8 @@ String MPB_LASER_750 = "COM6";
 String MPB_CMD_TERM = "\r";    // terminates commands
 String MPB_ANS_TERM = "\rD >"; // terminates answers
 
+//* %%%%%%%% *//* LASER 642 *//* %%%%%%%% 
+
 // Turn on MPB laser
 mmc.setSerialPortCommand(
 	MPB_LASER_642, "SETLDENABLE 1", MPB_CMD_TERM);
@@ -18,6 +20,26 @@ mmc.getSerialPortAnswer(MPB_LASER_642, MPB_ANS_TERM);
 float power = 200;
 mmc.setSerialPortCommand(
     MPB_LASER_642,
+    "SETPOWER 0 " + String.valueOf(power),
+    MPB_CMD_TERM
+);
+
+//* %%%%%%%% *//* LASER 750 *//* %%%%%%%% 
+
+// Turn on MPB laser
+mmc.setSerialPortCommand(
+	MPB_LASER_750, "SETLDENABLE 1", MPB_CMD_TERM);
+mmc.getSerialPortAnswer(MPB_LASER_750, MPB_ANS_TERM);
+
+// Turn off MPB laser
+mmc.setSerialPortCommand(
+	MPB_LASER_750, "SETLDENABLE 0", MPB_CMD_TERM);
+mmc.getSerialPortAnswer(MPB_LASER_750, MPB_ANS_TERM);
+
+// Set the MPB laser power
+float power = 500;
+mmc.setSerialPortCommand(
+    MPB_LASER_750,
     "SETPOWER 0 " + String.valueOf(power),
     MPB_CMD_TERM
 );
