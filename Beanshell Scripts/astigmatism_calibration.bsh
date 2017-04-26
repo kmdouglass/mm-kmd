@@ -9,6 +9,8 @@ COPYRIGHT: ECOLE POLYTECHNIQUE FEDERALE DE LAUSANNE, Switzerland
 
 import org.micromanager.data.Datastore;
 import org.micromanager.data.Image;
+import org.micromanager.data.Coords;
+import mmcorej.TaggedImage;
 
 /* Parameters to set before acquisition */
 float zStart   = -0.75;  // microns, relative to current focal plane
@@ -18,7 +20,8 @@ float interval = 100;   // milliseconds
 
 float number_slices = (zStop - zStart) / zStep;
 
-String savePath = "L:\\Z-Stacks\\astigmatism_pos1";
+String filename = "z_stack_test";
+String savePath = "L:\\Z-Stacks\\" + filename;
 
 savePath = mm.data().getUniqueSaveDirectory(savePath);
 
@@ -32,12 +35,21 @@ int curr_slice = 0;
 // move stage to starting z-position
 mmc.setRelativePosition(zStart);
 
+// Declare varialbes
+TaggedImage tmp;
+Image image;
+Coords coords;
+
 // Take an image, then move to the next z-position
 while (curr_slice < number_slices) {
-	image = mm.live().snap(false).get(0);
+	mmc.snapImage();
+	tmp = mmc.getTaggedImage();
+
+	// Convert to Image and update z-coordinate
+	image = mm.data().convertTaggedImage(tmp);
+	coords = image.getCoords().copy().z(curr_slice).build();
+	image = image.copyAtCoords(coords);
 	
-	// Update z-coordinate of the image
-	image = image.copyAtCoords(builder.z(curr_slice).time(0).build());
 	store.putImage(image);
 
 	// Move to the next z-position
@@ -52,4 +64,7 @@ while (curr_slice < number_slices) {
 mmc.setRelativePosition(-zStop);
 
 // Save the datastore
+oldSummary = store.getSummaryMetadata();
+newSummary = oldSummary.copy().prefix(filename).build();
+store.setSummaryMetadata(newSummary);
 store.save(Datastore.SaveMode.MULTIPAGE_TIFF, savePath);
