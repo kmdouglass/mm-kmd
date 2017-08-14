@@ -1,5 +1,23 @@
 # Useful Posts to the Micro-Manager Mailing List
 
+## Device adapters
+
+### [Building Device Adapters on Windows 10 with Visual Studio 2015 Community](http://micro-manager.3463995.n2.nabble.com/Building-Device-Adapters-on-Windows-10-with-Visual-Studio-2015-Community-td7587098.html#a7587257)
+
++ **Original Poster** : Daniel Kovari
++ **Date** : 2016-05-26
+
+OP describes how he builds device adapters using Visual Studio 2015 instead of
+Visual C++ 2010 as described on the MM website.
+
+### [how to step through device adapter with VS debugger?](https://sourceforge.net/p/micro-manager/mailman/message/31968918/)
+
++ **Original Poster** : John Choi
++ **Date** : 2014-02-12
+
+OP asks how to debug device adapter code. Mark Tsuchida explains how to attach
+the debugger to the MM process.
+
 ## Image Processing
 
 ### [About the two data rate of micro-manager](https://sourceforge.net/p/micro-manager/mailman/message/35695058/)
