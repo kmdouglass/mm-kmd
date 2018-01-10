@@ -2,6 +2,13 @@
 
 ## Device adapters
 
+### [Switching device properties between read-only and settable](https://sourceforge.net/p/micro-manager/mailman/message/35953909/)
+
++ **Original Poster** : Kyle Douglass
++ **Date** : 2017-07-19
+
+I ask how to switch a device property between being settable and not.
+
 ### [Building Device Adapters on Windows 10 with Visual Studio 2015 Community](http://micro-manager.3463995.n2.nabble.com/Building-Device-Adapters-on-Windows-10-with-Visual-Studio-2015-Community-td7587098.html#a7587257)
 
 + **Original Poster** : Daniel Kovari

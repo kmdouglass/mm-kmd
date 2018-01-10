@@ -1,8 +1,9 @@
 # Building Micro-Manager Device Adapters
+
 ## Note
-These notes apply to Micro-Manager (MM) version 1.4 and Windows 7. They are not
-guaranteed to work for other versions of Micro-Manager or other operating
-systems.
+These notes apply to Micro-Manager (MM) version 2.0 and Windows Server R2012.
+They are not guaranteed to work for other versions of Micro-Manager or other
+operating systems.
 
 Most of these notes were taken while writing a minimum device adapter and
 reading the
@@ -12,26 +13,54 @@ reading the
 
 ## Download and install the software
 
-1. Download [TortoiseSVN](https://tortoisesvn.net/downloads.html) and install
-   it. SVN is used to checkout the 3rdpartypublic libraries.
- 
-
 These instructions loosely follow those listed
 [here](https://micro-manager.org/wiki/Building_MM_on_Windows) for building MM
 on Windows, but deviate significantly due to Visual Studio 2010 being phased-out
-by Microsoft.
+by Microsoft. Instead, I am using Microsoft Visual Studio 2015 Community Edition
+2 from EPFL's Distrilog server. Refer to
+[this thread](http://micro-manager.3463995.n2.nabble.com/Building-Device-Adapters-on-Windows-10-with-Visual-Studio-2015-Community-td7587098.html#none)
+for tips on building MM with VS2015.
 
-1. Download and install [WinCDEmu](http://wincdemu.sysprogs.org/download/).
-2. Download the .iso image for Microsoft Visual Studio 2015 Community Edition
-   Update 2 from EPFL's Distrilog.
-3. After WinCDEmu is installed, right-click on the image file and select
-   *Select driver letter & mount* from the context menu. Mount is as a **Data
-   disc**, open the mounted image, and double click the **vs_community.exe**
-   file.
-4. Follow the directions to install VS2015. Please note that I had already
+1. If not already installed, download and install Git.
+2. Navigate into your preferred source directory and clone the Github MM
+   repository. I do this in Git Bash.
+3. After cloning, cd into the micro-manager repository and checkout the mm2
+   branch.
+
+```
+git checkout mm2
+```
+
+4. Download [SlikSVN](https://sliksvn.com/download/) and install
+   it. SVN is used to checkout the 3rdpartypublic libraries.
+5. `cd ..` back into the source directory (one level above the micro-manager git
+   repository) and checkout the 3rdpartypublic repo using SVN:
+
+```
+svn checkout https://valelab4.ucsf.edu/svn/3rdpartypublic/
+```
+
+   If prompted for a username/password, use guest/guest. If the checkout times
+   out due to the large size of the repo, simply run the following commands until
+   it finishes to completion. 
+   
+```
+svn cleanup 3rdpartypublic
+svn checkout https://valelab4.ucsf.edu/svn/3rdpartypublic/
+```
+   
+   The timeout message will say "The server sent a truncated HTTP response
+   body."
+6. Download and install [WinCDEmu](http://wincdemu.sysprogs.org/download/). This
+   is used to mount the Visual Studio installation images.
+7. Download the .iso image for Microsoft Visual Studio 2015 Community Edition
+   Update 2 from EPFL's Distrilog. After WinCDEmu is installed, right-click
+   on the image file and select *Select driver letter & mount* from the context
+   menu. Mount is as a **Data disc**, open the mounted image, and double click
+   the **vs_community.exe** file.
+8. Follow the directions to install VS2015. Please note that I had already
    installed the Windows 7.1 SDK and .NET Framework 4 file as instructed on the
    MM website, so I am not sure whether this is necessary or not.
-5. 
 
 # Important Files
 Paths are relative to the *micro-manager* folder in the build environment.
