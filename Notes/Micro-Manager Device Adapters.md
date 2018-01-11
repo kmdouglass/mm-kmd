@@ -51,6 +51,7 @@ svn checkout https://valelab4.ucsf.edu/svn/3rdpartypublic/
    
    The timeout message will say "The server sent a truncated HTTP response
    body."
+   
 6. Download and install [WinCDEmu](http://wincdemu.sysprogs.org/download/). This
    is used to mount the Visual Studio installation images.
 7. Download the .iso image for Microsoft Visual Studio 2015 Community Edition
@@ -60,8 +61,12 @@ svn checkout https://valelab4.ucsf.edu/svn/3rdpartypublic/
    the **vs_community.exe** file.
 8. Follow the directions to install VS2015. Please note that I had already
    installed the Windows 7.1 SDK and .NET Framework 4 file as instructed on the
-   MM website, so I am not sure whether this is necessary or not.
+   MM website, so I am not sure whether this is necessary or not. **On Windows
+   Server 2016, Visual Studio automatically asked to install the Windows 8.1 SDK
+   and Universal CRT SDK when I opened my device adapter solution (.sln) file. I
+   installed these toolkits.**
 
+   
 # Important Files
 Paths are relative to the *micro-manager* folder in the build environment.
 
