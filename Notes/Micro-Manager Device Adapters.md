@@ -11,6 +11,21 @@ reading the
 
 # Building MM 2.0 on Windows
 
+## Microsoft Visual Studio 2015
+
+- To enable the properties manager for importing property sheets, you need to
+  navigate to **Tools > Import and Export Settings...**. In this window, select
+  **Import selected environment settings**, then click **Next.** There is no
+  need to save the current settings in the next window, so select **No, just
+  import new settings, overwriting my current settings** and click **Next**.
+  Select **Visual C++** in the next window and click **Next >**. Finally, click
+  **Finish** in the final window. The property manager should now appear as a
+  tab at the bottom of the Solution Explorer.
+- You may also need to update the **Platform Toolset** and
+  **Target Platform Version** of the MMDevice-SharedRuntime reference to match
+  the settings of the device adapter for VS 2015. For me, these are **Visual
+  Studio (v140)** and **8.1**, respectively.
+
 ## Download and install the software
 
 These instructions loosely follow those listed
