@@ -88,10 +88,17 @@ svn checkout https://valelab4.ucsf.edu/svn/3rdpartypublic/
 
 ## Java components
 
-To build the Java components, you will also need the following. Versions are the ones that I use; not those recommended on the information page.
+The MM Java components are not necessary for building device adapters, but they are necessary for the Micro-Manager Studio (the ImageJ plugin). To build the Java components, you will also need the following packages. Versions are the ones that I use; not those recommended on the information page.
 
 - Ant 1.10.3 http://ant.apache.org/bindownload.cgi
 - JDK 8u172 http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+
+### Environment variables
+Set the following environment variables when building the Java components (change them to where you installed the JDK and Ant on your system):
+
+- **JAVA_HOME** C:\Program Files\Java\jdk1.8.0_172
+- **ANT_HOME** C:\Users\douglass\apps\apache-ant-1.10.3
+- Append **;%ANT_HOME%\bin** to the end of **PATH**
    
 # Important Files
 Paths are relative to the *micro-manager* folder in the build environment.
