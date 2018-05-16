@@ -86,6 +86,12 @@ svn checkout https://valelab4.ucsf.edu/svn/3rdpartypublic/
    and Universal CRT SDK when I opened my device adapter solution (.sln) file. I
    installed these toolkits.**
 
+## Java components
+
+To build the Java components, you will also need the following. Versions are the ones that I use; not those recommended on the information page.
+
+- Ant 1.10.3 http://ant.apache.org/bindownload.cgi
+- JDK 8u172 http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
    
 # Important Files
 Paths are relative to the *micro-manager* folder in the build environment.
