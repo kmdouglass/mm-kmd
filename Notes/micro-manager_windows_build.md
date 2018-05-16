@@ -30,6 +30,7 @@ reading the
   **Target Platform Version** of the MMDevice-SharedRuntime reference to match
   the settings of the device adapter for VS 2015. For me, these are **Visual
   Studio (v140)** and **8.1**, respectively.
+- See [https://github.com/kmdouglass/mm-kmd/blob/master/Notes/upgrade_to_vs2015.PNG](https://github.com/kmdouglass/mm-kmd/blob/master/Notes/upgrade_to_vs2015.PNG) for the message that appeared when I first loaded the Micro-manager solution in VS2015.
 
 ## Download and install the software
 
