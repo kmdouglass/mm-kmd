@@ -13,6 +13,11 @@ reading the
 
 ## Microsoft Visual Studio 2015
 
+- I sometimes encounter security exceptions when attempting to sign in to use
+  the VS 2015. When I see these, I add the site as a trusted site by going to
+  **Start > Control Panel > Internet Options**, clicking the **Security** tab,
+  and clicking the **Trusted Sites** picture, and then clicking the **Sites**
+  button. Then I add the website that was listed in the exception to the list.
 - To enable the properties manager for importing property sheets, you need to
   navigate to **Tools > Import and Export Settings...**. In this window, select
   **Import selected environment settings**, then click **Next.** There is no
