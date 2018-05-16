@@ -31,6 +31,7 @@ reading the
   the settings of the device adapter for VS 2015. For me, these are **Visual
   Studio (v140)** and **8.1**, respectively.
 - See [https://github.com/kmdouglass/mm-kmd/blob/master/Notes/upgrade_to_vs2015.PNG](https://github.com/kmdouglass/mm-kmd/blob/master/Notes/upgrade_to_vs2015.PNG) for the message that appeared when I first loaded the Micro-manager solution in VS2015.
+- After having installed VS2015 on one machine, I was unable to load the projects defined in `micromanager.sln`. I received an error stating that `C:\Program Files (x86)\MSBuild\Microscoft.Cpp\v4.0\Microsoft.Cpp.props` was not found. To fix this, I installed the Visual C++ 2010 compiler fix at https://www.microsoft.com/en-us/download/details.aspx?id=4422.
 
 ## Download and install the software
 
