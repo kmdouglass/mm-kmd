@@ -1,4 +1,4 @@
-# Building Micro-Manager Device Adapters
+# Building Micro-Manager Components and Device Adapters
 
 ## Note
 These notes apply to Micro-Manager (MM) version 2.0 and Windows Server R2012.
