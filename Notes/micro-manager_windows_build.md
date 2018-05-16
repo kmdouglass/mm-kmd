@@ -32,7 +32,7 @@ reading the
   Studio (v140)** and **8.1**, respectively.
 - See [https://github.com/kmdouglass/mm-kmd/blob/master/Notes/upgrade_to_vs2015.PNG](https://github.com/kmdouglass/mm-kmd/blob/master/Notes/upgrade_to_vs2015.PNG) for the message that appeared when I first loaded the Micro-manager solution in VS2015.
 - After having installed VS2015 on one machine, I was unable to load the projects defined in `micromanager.sln`. I received an error stating that `C:\Program Files (x86)\MSBuild\Microscoft.Cpp\v4.0\Microsoft.Cpp.props` was not found. To fix this, I installed the Visual C++ 2010 compiler fix at https://www.microsoft.com/en-us/download/details.aspx?id=4422.
-- You might also receive an **Unknown compiler** warning when building a project. This is best the version of Boost in the 3rdpartypublic repository is quite old. See https://stackoverflow.com/questions/47004187/visual-studio-unknown-compiler-version-after-upgrading for more information.
+- You might also receive an **Unknown compiler** warning when building  a project. This is because the version of Boost in the 3rdpartypublic repository is quite old and can't be compiled with VS2015. See https://stackoverflow.com/questions/47004187/visual-studio-unknown-compiler-version-after-upgrading for more information. I downloaded and installed Boost 1.67 msvc-14.0-64 from https://sourceforge.net/projects/boost/files/boost-binaries/1.67.0/.
 
 ## Download and install the software
 
