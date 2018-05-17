@@ -11,12 +11,18 @@ reading the
 
 # Building MM 2.0 on Windows
 
-## Which VS, .NET, and Windows version should I use?
+## Which Visual Studio, .NET, and SDK and Windows version should I use?
 - Visual Studio 2010 (what MM i currently built with) is horribly outdated and has been impossible for me to find. For this reason, I use newer versions of VS.
 - Pick the version of Visual Studio and .NET that corresponds to your Windows environment. https://en.wikipedia.org/wiki/.NET_Framework#Release_history
 
-## Microsoft Visual Studio 2015
+## Installation Order
+From a clean system without anything installed (including .NET), the order from first-to-last should be:
+- Windows SDK *and* .NET (they sometimes come bundled)
+- Visual C++ (a.k.a. Visual Studio for newer versions)
+- Any service packs for your version of Visual Studio
+- If you can't load the Micro-Manager .sln file or update it to your version of Visual Studio, try installing the repairs to the Visual C++ 2010 compilers: https://www.microsoft.com/en-us/download/details.aspx?id=4422
 
+## Microsoft Visual Studio 2015
 - I sometimes encounter security exceptions when attempting to sign in to use
   the VS 2015. When I see these, I add the site as a trusted site by going to
   **Start > Control Panel > Internet Options**, clicking the **Security** tab,
