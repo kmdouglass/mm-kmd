@@ -17,7 +17,7 @@ reading the
 
 ## Installation Order
 From a clean system without anything installed (including .NET), the order from first-to-last should be:
-- Windows SDK *and* .NET (they sometimes come bundled)
+- Windows SDK *and* .NET (they often come bundled; for example, if you download the Windows 8.1 SDK, you will have an option during the installation to also install .NET 4.5.1)
 - Visual C++ (a.k.a. Visual Studio for newer versions)
 - Any service packs for your version of Visual Studio
 - If you can't load the Micro-Manager .sln file or update it to your version of Visual Studio, try installing the repairs to the Visual C++ 2010 compilers: https://www.microsoft.com/en-us/download/details.aspx?id=4422
