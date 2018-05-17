@@ -11,6 +11,10 @@ reading the
 
 # Building MM 2.0 on Windows
 
+## Which VS, .NET, and Windows version should I use?
+- Visual Studio 2010 (what MM i currently built with) is horribly outdated and has been impossible for me to find. For this reason, I use newer versions of VS.
+- Pick the version of Visual Studio and .NET that corresponds to your Windows environment. https://en.wikipedia.org/wiki/.NET_Framework#Release_history
+
 ## Microsoft Visual Studio 2015
 
 - I sometimes encounter security exceptions when attempting to sign in to use
