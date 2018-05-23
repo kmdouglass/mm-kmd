@@ -44,6 +44,11 @@ From a clean system without anything installed (including .NET), the order from 
 - After having installed VS2015 on one machine, I was unable to load the projects defined in `micromanager.sln`. I received an error stating that `C:\Program Files (x86)\MSBuild\Microscoft.Cpp\v4.0\Microsoft.Cpp.props` was not found. To fix this, I installed the Visual C++ 2010 compiler fix at https://www.microsoft.com/en-us/download/details.aspx?id=4422.
 - You might also receive an **Unknown compiler** warning when building  a project. This is because the version of Boost in the 3rdpartypublic repository is quite old and can't be compiled with VS2015. See https://stackoverflow.com/questions/47004187/visual-studio-unknown-compiler-version-after-upgrading for more information. I downloaded and installed Boost 1.67 msvc-14.0-64 from https://sourceforge.net/projects/boost/files/boost-binaries/1.67.0/.
 
+## Microsoft Visual Studio 2017
+
+- VS 2017 is **much** easier to build Micro-Manager in than VS 2015. After opening the micromanager.sln file from the GitHub source repository, select the solution in the Solution Explorer (it usually is at the top above all the various subcomponents). Then, go to the menu bar and select *Project > Retarget solution*. Upgrade to the VS2017 toolset by selecting v141 for the platform toolset. To ensure compatibility with older Microsoft Windows versions, I used the Windows 8.1 SDK (not the one corresponding to Windows 10).
+- Ensure that, when Retargeting the solution, that you scroll ALL the way down to the bottom of the window and ensure that **everything** is set to the Windows 8.1 SDK and VS 141 platform toolset. It's easy to miss some projects because they're options will lie at the bottom of the scrollable dialog window.
+
 ## Updating the version of Boost to compile against
 1. Download an updated version of Boost from https://sourceforge.net/projects/boost/files/boost-binaries/. Choose a version and the file ending in **msvc-XX.X-64.exe**. Here, XX.X refers to the Microsoft Visual Studio Platform Toolset. (For example, 14.0 is VS 2015 and 14.1 is VS 2017.)
 2. Install the Boost libraries into a convenient location, such as 3rdpartypublic/boost-versions/boost_<VERSION>
