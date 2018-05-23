@@ -44,6 +44,17 @@ From a clean system without anything installed (including .NET), the order from 
 - After having installed VS2015 on one machine, I was unable to load the projects defined in `micromanager.sln`. I received an error stating that `C:\Program Files (x86)\MSBuild\Microscoft.Cpp\v4.0\Microsoft.Cpp.props` was not found. To fix this, I installed the Visual C++ 2010 compiler fix at https://www.microsoft.com/en-us/download/details.aspx?id=4422.
 - You might also receive an **Unknown compiler** warning when building  a project. This is because the version of Boost in the 3rdpartypublic repository is quite old and can't be compiled with VS2015. See https://stackoverflow.com/questions/47004187/visual-studio-unknown-compiler-version-after-upgrading for more information. I downloaded and installed Boost 1.67 msvc-14.0-64 from https://sourceforge.net/projects/boost/files/boost-binaries/1.67.0/.
 
+## Updating the version of Boost to compile against
+1. Download an updated version of Boost from https://sourceforge.net/projects/boost/files/boost-binaries/. Choose a version and the file ending in **msvc-XX.X-64.exe**. Here, XX.X refers to the Microsoft Visual Studio Platform Toolset. (For example, 14.0 is VS 2015 and 14.1 is VS 2017.)
+2. Install the Boost libraries into a convenient location, such as 3rdpartypublic/boost-versions/boost_<VERSION>
+3. [Source](http://micro-manager.3463995.n2.nabble.com/Building-Device-Adapters-on-Windows-10-with-Visual-Studio-2015-Community-td7587098.html#none): Edit the MMcomon.props file to point to the new library. Navigate to ...\projects\micro-manager\buildscripts\VisualStudio, open MMcomon.props with a text editor, and change lines 8 and 9 to point to the location of the new copy of boost (and the appropriate binary lib files). For example:
+
+```
+<MM_BOOST_INCLUDEDIR>$(MM_3RDPARTYPUBLIC)\boost-versions\boost_1_61_0</MM_BOOST_INCLUDEDIR>
+<MM_BOOST_LIBDIR>$(MM_3RDPARTYPUBLIC)\boost-versions\boost_1_61_0\lib64-msvc-14.0</MM_BOOST_LIBDIR>
+```
+
+# Old installation notes
 ## Download and install the software
 
 These instructions loosely follow those listed
